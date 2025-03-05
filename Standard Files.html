@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Standard Files - GTA 5 Mods</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #0a0a0a;
+            color: white;
+            text-align: center;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        header, footer {
+            background: #111;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            padding: 10px 15px;
+            transition: background 0.3s;
+        }
+        nav a:hover {
+            background: green;
+            border-radius: 5px;
+        }
+        .content-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-grow: 1;
+            gap: 20px;
+            width: 100%;
+            padding: 20px;
+        }
+        .content-card {
+            background: #222;
+            padding: 15px;
+            border-radius: 10px;
+            flex: 1;
+            min-width: 1000px;
+            max-width: 1000px;
+            height: 25px;
+            width: 10000px;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .content-card h3 {
+            flex: 1;
+            margin-right: 20px;
+        }
+        .download-btn {
+            display: inline-block;
+            padding: 10px;
+            background: green;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .download-btn:hover {
+            background: darkgreen;
+        }
+        .top-text {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+        }
+        .menu-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .menu-right span {
+            font-size: 18px;
+            color: white;
+        }
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .search-input {
+            padding: 5px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #333;
+            color: white;
+        }
+        .search-btn {
+            padding: 5px 10px;
+            background: green;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .search-btn:hover {
+            background: darkgreen;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h4>Standard Files - GTA 5 Mods</h4>
+        <nav>
+            <a href="C:\Users\Msi\Desktop\gta5 mods\gtan5mods.html" class="text-white text-decoration-none">Home</a>
+            <a href="file:///C:/Users/Msi/Desktop/gta5%20mods/Standard%20Files.html" class="text-white text-decoration-none">Standard Files</a>
+            <a href="#redux" class="text-white text-decoration-none">Redux</a>
+            <a href="#gun-pack" class="text-white text-decoration-none">Gun Pack</a>
+        </nav>
+        <div class="menu-right">
+            <span>Dosya Arama</span>
+            <div class="search-box">
+                <input type="text" id="searchInput" class="search-input" placeholder="Dosya adı girin..." onkeyup="searchFiles()">
+                <button class="search-btn" onclick="searchFiles()">Ara</button>
+            </div>
+        </div>
+    </header>
+
+    <section id="standard-files" class="content-container">
+        <div class="content-card" data-file="update">
+            <h3>update.rpf</h3>
+            <a href="https://drive.google.com/drive/folders/1KXJcJqdRiY8623Bqz_bkqce7RiByxFM4" class="download-btn" target="_blank">Download</a>
+        </div>
+        <div class="content-card" data-file="common">
+            <h3>common.rpf</h3>
+            <a href="https://drive.google.com/file/d/1noKS-JVnafxaF_OuiN7HykAnh6WQRVB6/view" class="download-btn" target="_blank">Download</a>
+        </div>
+
+        <!-- x64 files -->
+        <div class="content-card" data-file="x64a">
+            <h3>x64a.rpf</h3>
+            <a href="https://drive.google.com/file/d/1ZyDQoxt1ZWczKLtYf85HyKvUcj-PIHtx/view" class="download-btn" target="_blank">Download</a>
+        </div>
+        <div class="content-card" data-file="x64b">
+            <h3>x64b.rpf</h3>
+            <a href="https://drive.google.com/file/d/10f7GlI7X4UYsIK8GoseTSmViAeE7hGj7/view" class="download-btn" target="_blank">Download</a>
+        </div>
+        <div class="content-card" data-file="x64c">
+            <h3>x64c.rpf</h3>
+            <a href="https://drive.google.com/file/d/1tj37ENdtJzt32MlzuVev0W6FipkwK54h/view" class="download-btn" target="_blank">Download</a>
+        </div>
+        <div class="content-card" data-file="x64d">
+            <h3>x64d.rpf</h3>
+            <a href="https://drive.google.com/file/d/1V_-K8LD5F-r7fgk0feXmf020jPdcVxhM/view" class="download-btn" target="_blank">Download</a>
+        </div>
+        <div class="content-card" data-file="x64e">
+            <h3>x64e.rpf</h3>
+            <a href="https://drive.google.com/file/d/19-VzvVBSl1c1gg32Zv_NVBQmYqpogLQZ/view" class="download-btn" target="_blank">Download</a>
+        </div>
+        <div class="content-card" data-file="x64f">
+            <h3>x64f.rpf</h3>
+            <a href="https://drive.google.com/file/d/10sS3vyWVYjYb20VHchE1v-1n9XjDt-tP/view" class="download-btn" target="_blank">Download</a>
+        </div>
+        <div class="content-card" data-file="x64g">
+            <h3>x64g.rpf</h3>
+            <a href="https://drive.google.com/file/d/1cDLvNeAqY-oKXYzkjqpLFSiIFXZiHWM1/view" class="download-btn" target="_blank">Download</a>
+        </div>
+        <div class="content-card" data-file="x64h">
+            <h3>x64h.rpf</h3>
+            <a href="https://drive.google.com/file/d/18nR5_qaUb1tPhV_ySqHtZQZrP_ZaggnX/view" class="download-btn" target="_blank">Download</a>
+        </div>
+        <div class="content-card" data-file="x64i">
+            <h3>x64i.rpf</h3>
+            <a href="https://drive.google.com/file/d/1REskM0v6qB4_Hcm4vVtLR6DRsawuSYGQ/view" class="download-btn" target="_blank">Download</a>
+        </div>
+        <div class="content-card" data-file="x64j">
+            <h3>x64j.rpf</h3>
+            <a href="https://drive.google.com/file/d/1MhG-BMpjRS8pY-d8oGCTZGcU4-MPmSN6/view" class="download-btn" target="_blank">Download</a>
+        </div>
+        <div class="content-card" data-file="x64k">
+            <h3>x64k.rpf</h3>
+            <a href="https://drive.google.com/file/d/14WvXRnlp8zP9-fJqC4dKqV0LdoUncYMG/view" class="download-btn" target="_blank">Download</a>
+        </div>
+        <div class="content-card" data-file="x64l">
+            <h3>x64l.rpf</h3>
+            <a href="https://drive.google.com/file/d/1bD8gbyIfaanM00U7azR0hrM3rzWLX1D-/view" class="download-btn" target="_blank">Download</a>
+        </div>
+        <div class="content-card" data-file="x64m">
+            <h3>x64m.rpf</h3>
+            <a href="https://drive.google.com/file/d/1YaJH_eHieVbSBHkr2K1vXw3r9RNlhISc/view" class="download-btn" target="_blank">Download</a>
+        </div>
+        <div class="content-card" data-file="x64n">
+            <h3>x64n.rpf</h3>
+            <a href="https://drive.google.com/file/d/1tVQpE-YVT1SdIm4GCLEkG4eVtuITGgaq/view" class="download-btn" target="_blank">Download</a>
+        </div>
+        <div class="content-card" data-file="x64o">
+            <h3>x64o.rpf</h3>
+            <a href="https://drive.google.com/file/d/1WPdO4_sNRaYI9ZUFawxByLmjazsp3xJV/view" class="download-btn" target="_blank">Download</a>
+        </div>
+        <div class="content-card" data-file="x64p">
+            <h3>x64p.rpf</h3>
+            <a href="https://drive.google.com/file/d/1l7Uc5IbWHGoSp-Bk0ipMLExDOGyu8xUa/view" class="download-btn" target="_blank">Download</a>
+        </div>
+        <h2>Dlcpacks</h2>
+<div class="content-card" data-file="mpairraces">
+    <h3>mpairraces</h3>
+    <a href="https://drive.google.com/file/d/1oonJDpZIdtvjRCZayGk5ZllHtTHMlOi7/view" class="download-btn" target="_blank">Download</a>
+</div>
+<div class="content-card" data-file="mpappartment">
+    <h3>mpappartment</h3>
+    <a href="https://drive.google.com/file/d/1XHGG7Ls15UTh7LxX_gLlcOhSb18QEICX/view" class="download-btn" target="_blank">Download</a>
+</div>
+<div class="content-card" data-file="mpassault">
+    <h3>mpassault</h3>
+    <a href="https://drive.google.com/file/d/1J7qFXKPNRqG3wgyPK-04RwjpagLJglu3/view" class="download-btn" target="_blank">Download</a>
+</div>
+<div class="content-card" data-file="mpbattle">
+    <h3>mpbattle</h3>
+    <a href="https://drive.google.com/file/d/1C3S7vLEn4tr_pWId6cR7WCADsgrvSKwb/view" class="download-btn" target="_blank">Download</a>
+</div>
+<div class="content-card" data-file="mpbiker">
+    <h3>mpbiker</h3>
+    <a href="https://drive.google.com/file/d/1om0uSVOB2bAxTaNU4HfeU2xP7XW1djwi/view" class="download-btn" target="_blank">Download</a>
+</div>
+<div class="content-card" data-file="mpchristmas2">
+    <h3>mpchristmas2</h3>
+    <a href="https://drive.google.com/file/d/1p5-JdlSU6ncmySrKsqWxRKsvq61DWWQP/view" class="download-btn" target="_blank">Download</a>
+</div>
+<div class="content-card" data-file="mpchristmas2017">
+    <h3>mpchristmas2017</h3>
+    <a href="https://drive.google.com/file/d/1uxCNY3xRau8soY19LZBwDgtyw765kb1h/view" class="download-btn" target="_blank">Download</a>
+</div>
+<div class="content-card" data-file="mpchristmas2018">
+    <h3>mpchristmas2018</h3>
+    <a href="https://drive.google.com/file/d/1b7UpsyVIbvCK1bL_enm3LJnpV3eAqQ2s/view" class="download-btn" target="_blank">Download</a>
+</div>
+<div class="content-card" data-file="mpexecutive">
+    <h3>mpexecutive</h3>
+    <a href="https://drive.google.com/file/d/1bKYya0-wRddVCmQdwMGpqaxQNqp9qWl3/view" class="download-btn" target="_blank">Download</a>
+</div>
+<div class="content-card" data-file="mpgunrunning">
+    <h3>mpgunrunning</h3>
+    <a href="https://drive.google.com/file/d/1hA_0gPEtXARVxN82ncsIsa18CAc8RONw/view" class="download-btn" target="_blank">Download</a>
+</div>
+<div class="content-card" data-file="mphalloween">
+    <h3>mphalloween</h3>
+    <a href="https://drive.google.com/file/d/1bBAoq7Z_1UnEn26j53rTaUoJPzA-oLYH/view" class="download-btn" target="_blank">Download</a>
+</div>
+<div class="content-card" data-file="mpheist">
+    <h3>mpheist</h3>
+    <a href="https://drive.google.com/file/d/1tKXhgiVZbJ9ywcHpRFOhJSBPhQWHjEEA/view" class="download-btn" target="_blank">Download</a>
+</div>
+<div class="content-card" data-file="mpheist3">
+    <h3>mpheist3</h3>
+    <a href="https://drive.google.com/file/d/15abqimBujaFOMJ21e3x2PaKfFjeYa_jE/view" class="download-btn" target="_blank">Download</a>
+</div>
+<div class="content-card" data-file="mpheist4">
+    <h3>mpheist4</h3>
+    <a href="https://drive.google.com/file/d/1f2-1oP-s4KhJDj0uZ5RvMRzEjaPArw0z/view" class="download-btn" target="_blank">Download</a>
+</div>
+<div class="content-card" data-file="mpimportexport">
+    <h3>mpimportexport</h3>
+    <a href="https://drive.google.com/file/d/1dMheYQ5EUoC4an7pPqz0Oq0s7hZwFZQP/view" class="download-btn" target="_blank">Download</a>
+</div>
+<div class="content-card" data-file="mpjanuary2016">
+    <h3>mpjanuary2016</h3>
+    <a href="https://drive.google.com/file/d/1w9yHcJ6UG6oPXPmOu2oapFXd87z1fB6o/view" class="download-btn" target="_blank">Download</a>
+</div>
+<div class="content-card" data-file="mplowrider">
+    <h3>mplowrider</h3>
+    <a href="https://drive.google.com/file/d/1A1vdCiCNqVe96vhSsKYK8lIG7IcR04iF/view" class="download-btn" target="_blank">Download</a>
+</div>
+<div class="content-card" data-file="mplowrider2">
+    <h3>mplowrider2</h3>
+    <a href="https://drive.google.com/file/d/1sGrt-PJw0QHbf-owB3oooIZeok8sYXXz/view" class="download-btn" target="_blank">Download</a>
+</div>
+<div class="content-card" data-file="mpluxe">
+    <h3>mpluxe</h3>
+    <a href="https://drive.google.com/file/d/16Cg1N9WN1mM28cC5-kEcYyzDUL0QyDiF/view" class="download-btn" target="_blank">Download</a>
+</div>
+<div class="content-card" data-file="mpluxe2">
+    <h3>mpluxe2</h3>
+    <a href="https://drive.google.com/file/d/1YOxeJ_fPGVqz0W2KHOXQnrxTDd830Wid/view" class="download-btn" target="_blank">Download</a>
+</div>
+<div class="content-card" data-file="mppatchesng">
+    <h3>mppatchesng</h3>
+    <a href="https://drive.google.com/file/d/1vgdexQe2T_LXJdp-A1bSjKyOH3iwHQqi/view" class="download-btn" target="_blank">Download</a>
+</div>
+<div class="content-card" data-file="mpreplay">
+    <h3>mpreplay</h3>
+    <a href="https://drive.google.com/file/d/1A9xTFP-4KE2TRtwdk2zf9bUZ3P-EF770/view" class="download-btn" target="_blank">Download</a>
+</div>
+<div class="content-card" data-file="mpsmuggler">
+    <h3>mpsmuggler</h3>
+    <a href="https://drive.google.com/file/d/19j6uoRB9KRljYm2hpMkhdBD5soRP28Ex/view" class="download-btn" target="_blank">Download</a>
+</div>
+<div class="content-card" data-file="mpspecialraces">
+    <h3>mpspecialraces</h3>
+    <a href="https://drive.google.com/file/d/1XpVGTdbXA4yf_luKrxbhJVVeyg9GEEHH/view" class="download-btn" target="_blank">Download</a>
+</div>
+<div class="content-card" data-file="mpstunt">
+    <h3>mpstunt</h3>
+    <a href="https://drive.google.com/file/d/1JTg8ndvQBQ9R17IARE_WMC-C9ZwWN-MZ/view" class="download-btn" target="_blank">Download</a>
+</div>
+<div class="content-card" data-file="mpsum">
+    <h3>mpsum</h3>
+    <a href="https://drive.google.com/file/d/1pgzJyL9UrBXqcGxFkclrkvzsoH7pO1tA/view" class="download-btn" target="_blank">Download</a>
+</div>
+<div class="content-card" data-file="mptuner">
+    <h3>mptuner</h3>
+    <a href="https://drive.google.com/file/d/1MDfqKMp8PKoUqcRFm8bOU4gwTwW0dsFk/view" class="download-btn" target="_blank">Download</a>
+</div>
+<div class="content-card" data-file="mpvalentines2">
+    <h3>mpvalentines2</h3>
+    <a href="https://drive.google.com/file/d/1NnWV1dR28cPTDyhJAlP5HT8uHwzxQLJw/view" class="download-btn" target="_blank">Download</a>
+</div>
+<div class="content-card" data-file="mpvinewood">
+    <h3>mpvinewood</h3>
+    <a href="https://drive.google.com/file/d/1oCGV-WcdlRhgfgIWXzVnkqOZ2BK_IP7i/view" class="download-btn" target="_blank">Download</a>
+</div>
+<div class="content-card" data-file="mpxmas_604490">
+    <h3>mpxmas_604490</h3>
+    <a href="https://drive.google.com/file/d/1rf-KiT-bC3jJqIxZCPGLtC7EFfgPvXcv/view" class="download-btn" target="_blank">Download</a>
+</div>
+<!-- Devamını bu şekilde ekleyebilirsiniz... -->
+    </section>
+
+
+    <footer>
+        <p>&copy; 2025 GTA 5 Mods</p>
+    </footer>
+
+    <script>
+        function searchFiles() {
+            const searchTerm = document.getElementById("searchInput").value.toLowerCase();
+            const files = document.querySelectorAll(".content-card");
+            
+            let found = false;
+            let visibleFiles = [];
+            files.forEach(file => {
+                const fileName = file.getAttribute("data-file").toLowerCase();
+                if (fileName.includes(searchTerm)) {
+                    file.style.display = "flex";
+                    visibleFiles.push(file);
+                    found = true;
+                } else {
+                    file.style.display = "none";
+                }
+            });
+
+            // Eğer yalnızca bir dosya kaldıysa düzeni bozmamak için
+            if (visibleFiles.length === 1) {
+                visibleFiles[0].style.width = "100%"; // Tek dosya olduğunda genişliği %100 yap
+            }
+
+            // Eğer dosyalar bulunduysa, en üstte göster
+            if (found) {
+                const resultContainer = document.querySelector('#standard-files');
+                resultContainer.prepend(...Array.from(files).filter(file => file.style.display === "flex"));
+            }
+        }
+
+        // Menüdeki Standard tıklandığında sayfayı yönlendirme
+        function goToStandardFiles() {
+            window.location.href = "#standard-files";
+        }
+    </script>
+</body>
+</html>
