@@ -6,230 +6,296 @@
     <title>Standard Files - GTA 5 Mods</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <style>
+       
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: Arial, sans-serif;
-            background: #0a0a0a;
-            color: white;
-            text-align: center;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
 
-        header, footer {
-            background: #111;
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: relative;
-        }
+body {
+    font-family: Arial, sans-serif;
+    background: #0a0a0a;
+    color: white;
+    text-align: center;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative; /* Animasyonlu arka planın görünmesi için */
+}
 
-        nav {
-            display: flex; /* Flexbox ile yatay hizalama */
-            gap: 20px; /* Menü öğeleri arasındaki boşluk */
-        }
-        nav a {
-            color: white;
-            text-decoration: none;
-            padding: 10px 15px;
-            transition: background 0.3s;
-            display: inline-block;
-        }
-        nav a:hover {
-            background: green;
-            border-radius: 5px;
-        }
+/* Neon Arka Plan Efekti */
+.neon-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #0a0a0a;
+    z-index: -1;
+    animation: neonBgPulse 1.5s infinite alternate; /* Neon efektini yapacak animasyon */
+}
 
-        .menu-right {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        .search-box {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .search-input {
-            padding: 5px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #333;
-            color: white;
-        }
-        .search-btn {
-            padding: 5px 10px;
-            background: green;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .search-btn:hover {
-            background: darkgreen;
-        }
+/* Neon şekiller */
+.neon-circle,
+.neon-square,
+.neon-triangle,
+.neon-heart,
+.neon-star,
+.neon-diamond,
+.extra-circle,
+.extra-square,
+.extra-triangle {
+    position: absolute;
+    background: rgba(0, 255, 0, 0.6);
+    animation: pulseEffect 3s infinite alternate; /* Bu animasyon yanıp sönme efekti sağlar */
+}
 
-        /* Gun Pack için Menü altındaki seçeneklerin düzeni */
-        #gun-pack-options {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background: #222;
-            border-radius: 5px;
-            width: 200px;
-            z-index: 100;
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
-        }
+/* Neon Arka Planın Yanıp Sönme Efekti */
+@keyframes neonBgPulse {
+    0% {
+        background: radial-gradient(circle, rgba(0, 255, 0, 0.1), rgba(0, 255, 0, 0.3) 50%, rgba(0, 0, 0, 0.5));
+    }
+    100% {
+        background: radial-gradient(circle, rgba(0, 255, 0, 0.3), rgba(0, 255, 0, 0.5) 50%, rgba(0, 0, 0, 0.7));
+    }
+}
 
-        #gun-pack:hover #gun-pack-options {
-            display: block;
-        }
+/* Şekillerin büyüyüp küçülmesi için animasyon */
+@keyframes pulseEffect {
+    0% {
+        transform: scale(0.8);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+}
 
-        #gun-pack-options a {
-            color: white;
-            text-decoration: none;
-            padding: 10px;
-            display: block;
-            border-bottom: 1px solid #444;
-        }
+/* Diğer içeriklerin düzenlenmesi */
+header, footer {
+    background: #111;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
 
-        #gun-pack-options a:hover {
-            background: green;
-        }
+nav {
+    display: flex;
+    gap: 20px;
+}
 
-        /* İçerik kartlarının düzeni */
-        .content-container {
-            display: block;
-            padding: 20px;
-            flex-grow: 1;
-        }
-        .content-card {
-            background: #222;
-            padding: 15px;
-            border-radius: 10px;
-            width: 100%;  /* Kartlar genişliği ekran boyutuna göre ayarlanacak */
-            max-width: 1000px; /* Kartlar daha uzun olacak şekilde genişliği arttırıldı */
-            height: 120px; /* Kartların boyutunu kısaltmak için yükseklik değeri */
-            margin: 20px auto;  /* Ortalamak için margin */
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
-            text-align: left;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+nav a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+    transition: background 0.3s;
+    display: inline-block;
+}
 
-        /* Kart başlığının düzeni */
-        .content-card h3 {
-            flex: 1;
-            margin-right: 20px;
-            font-size: 18px;
-        }
+nav a:hover {
+    background: green;
+    border-radius: 5px;
+}
 
-        /* İndir butonunun stili */
-        .download-btn {
-            display: inline-block;
-            padding: 10px;
-            background: green;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 16px;
-            min-width: 120px;
-            text-align: center;
-        }
+.menu-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
 
-        /* Butonun üzerine gelince renk değişimi */
-        .download-btn:hover {
-            background: darkgreen;
-        }
+.search-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 
-        /* Media Query - Küçük ekranlar (mobil cihazlar) */
-        @media (max-width: 768px) {
-            header, footer {
-                flex-direction: column;
-                align-items: center;
-            }
+.search-input {
+    padding: 5px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #333;
+    color: white;
+}
 
-            .content-container {
-                gap: 15px;
-            }
+.search-btn {
+    padding: 5px 10px;
+    background: green;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
 
-            .content-card {
-                min-width: 90%;
-                max-width: 90%;
-                width: 100%;
-                padding: 10px;
-            }
+.search-btn:hover {
+    background: darkgreen;
+}
 
-            .content-card h3 {
-                font-size: 16px;
-            }
+#gun-pack-options {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #222;
+    border-radius: 5px;
+    width: 200px;
+    z-index: 100;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
 
-            .download-btn {
-                font-size: 14px;
-                padding: 8px;
-            }
+#gun-pack:hover #gun-pack-options {
+    display: block;
+}
 
-            .menu-right span {
-                font-size: 16px;
-            }
+#gun-pack-options a {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    display: block;
+    border-bottom: 1px solid #444;
+}
 
-            .search-input {
-                font-size: 14px;
-                padding: 8px;
-            }
+#gun-pack-options a:hover {
+    background: green;
+}
 
-            .search-btn {
-                font-size: 14px;
-                padding: 8px;
-            }
-        }
+.content-container {
+    display: block;
+    padding: 20px;
+    flex-grow: 1;
+}
 
-        /* Media Query - Çok küçük ekranlar (daha küçük telefonlar) */
-        @media (max-width: 480px) {
-            .content-card {
-                min-width: 100%;
-                max-width: 100%;
-                width: 100%;
-            }
+.content-card {
+    background: #222;
+    padding: 15px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 1000px;
+    height: 120px;
+    margin: 20px auto;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-            .content-card h3 {
-                font-size: 14px;
-            }
+.content-card h3 {
+    flex: 1;
+    margin-right: 20px;
+    font-size: 18px;
+}
 
-            .download-btn {
-                font-size: 12px;
-                padding: 6px;
-            }
+.download-btn {
+    display: inline-block;
+    padding: 10px;
+    background: green;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+    min-width: 120px;
+    text-align: center;
+}
 
-            .menu-right span {
-                font-size: 14px;
-            }
+.download-btn:hover {
+    background: darkgreen;
+}
 
-            .search-input {
-                font-size: 12px;
-                padding: 6px;
-            }
+@media (max-width: 768px) {
+    header, footer {
+        flex-direction: column;
+        align-items: center;
+    }
 
-            .search-btn {
-                font-size: 12px;
-                padding: 6px;
-            }
-        }
+    .content-container {
+        gap: 15px;
+    }
+
+    .content-card {
+        min-width: 90%;
+        max-width: 90%;
+        width: 100%;
+        padding: 10px;
+    }
+
+    .content-card h3 {
+        font-size: 16px;
+    }
+
+    .download-btn {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .menu-right span {
+        font-size: 16px;
+    }
+
+    .search-input {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .search-btn {
+        font-size: 14px;
+        padding: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .content-card {
+        min-width: 100%;
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .content-card h3 {
+        font-size: 14px;
+    }
+
+    .download-btn {
+        font-size: 12px;
+        padding: 6px;
+    }
+
+    .menu-right span {
+        font-size: 14px;
+    }
+
+    .search-input {
+        font-size: 12px;
+        padding: 6px;
+    }
+
+    .search-btn {
+        font-size: 12px;
+        padding: 6px;
+    }
+}
+
     </style>
 </head>
 <body>
+    <!-- Animasyonlu Arka Plan -->
+    <div class="neon-bg">
+        <div class="neon-circle"></div>
+        <div class="neon-square"></div>
+        <div class="neon-triangle"></div>
+        <div class="neon-heart"></div>
+        <div class="neon-star"></div>
+        <div class="neon-diamond"></div>
+        <div class="extra-circle"></div>
+        <div class="extra-square"></div>
+        <div class="extra-triangle"></div>
+    </div>
+
     <header>
         <h4>Standard Files - GTA 5 Mods</h4>
         <nav>
             <a href="index.html" class="text-white text-decoration-none">Home</a>
             <a href="Standard%20Files.html" class="text-white text-decoration-none">Standard Files</a>
             <a href="#redux" class="text-white text-decoration-none">Redux</a>
-            <!-- 'Gun Pack' menüsüne yeni seçenekler eklendi -->
             <div id="gun-pack" class="text-white text-decoration-none" style="position: relative;">
                 <a href="#" class="text-white">Gun Pack</a>
                 <div id="gun-pack-options">
@@ -247,6 +313,7 @@
             </div>
         </div>
     </header>
+
     <section id="standard-files" class="content-container">
         <div class="content-card" data-file="update">
             <h3>update.rpf</h3>
@@ -606,7 +673,7 @@
     </section>
 
 
-     <footer>
+    <footer>
         <p>&copy; 2025 GTA 5 Mods</p>
     </footer>
 
@@ -628,19 +695,16 @@
                 }
             });
 
-            // Eğer yalnızca bir dosya kaldıysa düzeni bozmamak için
             if (visibleFiles.length === 1) {
-                visibleFiles[0].style.width = "100%"; // Tek dosya olduğunda genişliği %100 yap
+                visibleFiles[0].style.width = "100%";
             }
 
-            // Eğer dosyalar bulunduysa, en üstte göster
             if (found) {
                 const resultContainer = document.querySelector('#standard-files');
                 resultContainer.prepend(...Array.from(files).filter(file => file.style.display === "flex"));
             }
         }
 
-        // Menüdeki Standard tıklandığında sayfayı yönlendirme
         function goToStandardFiles() {
             window.location.href = "#standard-files";
         }
