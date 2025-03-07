@@ -3,12 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>THİRTYONE - Redux</title>
+  <title>GTA 5 Mods</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-storage-compat.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body {
@@ -77,11 +73,10 @@
       border-radius: 5px;
     }
     /* Admin durumu */
-    #admin-name {
+    #adminStatus {
       font-size: 18px;
-      color: #00ff00;
+      color: lime;
       margin-left: 10px;
-      text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
     }
     .menu-right {
       display: flex;
@@ -311,13 +306,13 @@
   <header>
     <div class="logo">
       <a href="index.html">
-        <img src="Thirtyone.png" width="200" height="200" alt="Logo">
+        <img src="Thirtyone.png" alt="Logo">
       </a>
     </div>
     <nav>
-      <a href="index.html">Home</a>
-      <a href="Standard%20Files.html">Standard Files</a>
-      <a href="redux.html">Redux</a>
+      <a href="index.html" class="text-white text-decoration-none">Home</a>
+      <a href="Standard%20Files.html" class="text-white text-decoration-none">Standard Files</a>
+      <a href="redux.html" class="text-white text-decoration-none">Redux</a>
       <div id="gun-pack" class="text-white text-decoration-none">
         <a href="#">Gun Pack</a>
         <div id="gun-pack-options">
@@ -328,7 +323,13 @@
       </div>
     </nav>
     <div class="menu-right">
-      <span id="admin-name"></span>
+      <span>Dosya Arama</span>
+      <div class="search-box">
+        <input type="text" id="searchInput" class="search-input" placeholder="Dosya adı girin..." onkeyup="searchFiles()">
+        <button class="search-btn" onclick="searchFiles()">Ara</button>
+      </div>
+      <!-- Admin durumu yazısı: başlangıçta boş -->
+      <span id="adminStatus"></span>
     </div>
   </header>
 
@@ -337,31 +338,29 @@
     <!-- Kartlar localStorage'dan yüklenecek -->
   </div>
 
-  <!-- Admin Giriş Butonları -->  
-  <button id="adminBtn" onclick="showAdminLoginForm()" style="position: fixed; bottom: 10px; right: 40px; padding: 10px 20px; background: green; color: white; border: none; border-radius: 5px; z-index: 20;">Admin Girişi</button>
-  <button id="addBtn" onclick="showAddContentModal()" style="position: fixed; bottom: 10px; right: 40px; padding: 10px 20px; background: #006400; color: white; border: none; border-radius: 5px; z-index: 20; display: none; width: 130px;">Ekle</button>
-
-  <!-- Admin Giriş Formu -->
-  <div id="adminLoginForm" style="display:none; position: fixed; bottom: 20px; right: 20px; background: rgba(0, 0, 0, 0.9); padding: 20px; border-radius: 10px; z-index: 1000; box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);">
-    <div style="position: relative;">
-      <button onclick="closeAdminForm()" style="position: absolute; right: -10px; top: -10px; background: red; color: white; border: none; border-radius: 50%; width: 25px; height: 25px; cursor: pointer; font-size: 16px;">×</button>
-      <h4 style="color: white; margin-bottom: 15px;">Admin Girişi</h4>
-      <input type="text" id="adminUsername" placeholder="Kullanıcı Adı" style="margin-bottom: 10px; padding: 8px; width: 100%; background: #333; border: 1px solid #555; color: white; border-radius: 5px;">
-      <input type="password" id="adminPassword" placeholder="Şifre" style="margin-bottom: 10px; padding: 8px; width: 100%; background: #333; border: 1px solid #555; color: white; border-radius: 5px;">
-      <button id="loginButton" style="width: 100%; padding: 10px; background: green; color: white; border: none; border-radius: 5px; cursor: pointer;">Giriş Yap</button>
-    </div>
+  <!-- Admin Girişi için Form (Başlangıçta gizli) -->
+  <div id="adminLoginForm" style="display:none; position: fixed; bottom: 60px; right: 10px; background: #333; padding: 15px; border-radius: 5px; z-index: 20;">
+    <h4>Admin Girişi</h4>
+    <input type="text" id="adminUsername" placeholder="Kullanıcı Adı" style="margin-bottom: 10px; padding: 5px; width: 100%;">
+    <input type="password" id="adminPassword" placeholder="Şifre" style="margin-bottom: 10px; padding: 5px; width: 100%;">
+    <button onclick="adminLogin()" class="btn btn-success">Giriş Yap</button>
   </div>
 
-  <!-- Add Content Modal (Yeni Mod Ekle Formu) -->
-  <div id="addContentModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000;">
-    <div style="position: relative; background: #333; width: 90%; max-width: 500px; margin: 50px auto; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);">
-      <button onclick="hideAddContentModal()" style="position: absolute; right: -10px; top: -10px; background: red; color: white; border: none; border-radius: 50%; width: 25px; height: 25px; cursor: pointer; font-size: 16px;">×</button>
-      <h4 style="color: white; margin-bottom: 20px;">Yeni Mod Ekle</h4>
-      <input type="text" id="youtubeLink" placeholder="YouTube Linki" style="width: 100%; padding: 10px; margin-bottom: 15px; background: #222; border: 1px solid #555; color: white; border-radius: 5px;">
-      <input type="text" id="contentTitle" placeholder="Mod İsmi" style="width: 100%; padding: 10px; margin-bottom: 15px; background: #222; border: 1px solid #555; color: white; border-radius: 5px;">
-      <textarea id="contentDescription" placeholder="Mod Açıklaması" rows="4" style="width: 100%; padding: 10px; margin-bottom: 15px; background: #222; border: 1px solid #555; color: white; border-radius: 5px; resize: none;"></textarea>
-      <input type="text" id="downloadLink" placeholder="İndirme Linki" style="width: 100%; padding: 10px; margin-bottom: 20px; background: #222; border: 1px solid #555; color: white; border-radius: 5px;">
-      <button onclick="saveContent()" style="width: 100%; padding: 12px; background: #006400; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px;">Kaydet</button>
+  <!-- Admin Girişi için Buton (Sağ Alt) -->
+  <button id="adminBtn" onclick="document.getElementById('adminLoginForm').style.display='block'" style="position: fixed; bottom: 10px; right: 10px; padding: 10px 20px; background: green; color: white; border: none; border-radius: 5px; z-index: 20;">Admin Girişi</button>
+
+  <!-- Add Content Modal (Yeni Mod Ekle/Düzenle Formu) - Başlangıçta gizli -->
+  <div id="addContentModal">
+    <div class="modal-content">
+      <h4 id="modalTitle">Yeni Mod Ekle</h4>
+      <input type="text" id="youtubeLink" placeholder="YouTube Linki">
+      <input type="text" id="contentTitle" placeholder="Mod Başlığı">
+      <textarea id="contentDescription" placeholder="Mod Açıklaması" rows="3"></textarea>
+      <input type="text" id="downloadLink" placeholder="İndirme Linki">
+      <div style="text-align: right;">
+        <button onclick="hideAddContentModal()" style="background: #555; margin-right: 10px;">İptal</button>
+        <button onclick="saveContent()">Kaydet</button>
+      </div>
     </div>
   </div>
 
@@ -371,146 +370,217 @@
   </footer>
 
   <script>
-    // Admin girişi için gerekli değişkenler
-    const correctUsername = "harvey";
-    const correctPassword = "1234";
-
-    // Admin listesini localStorage'dan al
-    const adminList = JSON.parse(localStorage.getItem('adminList')) || [];
-    const adminPasswords = JSON.parse(localStorage.getItem('adminPasswords')) || {};
-
-    // Sayfa değişikliği kontrolü
-    window.addEventListener('beforeunload', function(e) {
-      const isAdminLoggedIn = localStorage.getItem('isAdminLoggedIn') === 'true';
-      if (isAdminLoggedIn) {
-        e.preventDefault();
-        e.returnValue = 'Admin girişinden çıkmadan sayfadan ayrılamazsınız. Lütfen önce "Çıkış Yap" butonuna tıklayın.';
-        return e.returnValue;
-      }
-    });
-
-    // Sayfa içi link tıklamalarını kontrol et
-    document.addEventListener('click', function(e) {
-      const isAdminLoggedIn = localStorage.getItem('isAdminLoggedIn') === 'true';
-      if (isAdminLoggedIn && e.target.tagName === 'A' && !e.target.closest('#adminLoginForm')) {
-        e.preventDefault();
-        alert('Admin girişinden çıkmadan sayfadan ayrılamazsınız. Lütfen önce "Çıkış Yap" butonuna tıklayın.');
-      }
-    });
-
-    // Çıkış yapma fonksiyonu
-    function adminLogout() {
-      // LocalStorage'dan admin bilgilerini sil
-      localStorage.removeItem('isAdminLoggedIn');
-      localStorage.removeItem('adminUsername');
-      
-      // Sayfayı yenile
-      window.location.reload();
-    }
-
-    // Sayfa yüklendiğinde admin durumunu kontrol et
     window.onload = function() {
-      // LocalStorage'dan admin durumunu kontrol et
-      const isAdminLoggedIn = localStorage.getItem('isAdminLoggedIn') === 'true';
-      const adminUsername = localStorage.getItem('adminUsername');
+  // Admin girişini kontrol et
+  if (localStorage.getItem('isAdminLoggedIn') === 'true') {
+    // Admin menüsünü göster
+    document.getElementById('modEkleBtn').style.display = 'block';
+  } else {
+    // Admin girişi yapılmamışsa admin butonunu gizle
+    document.getElementById('modEkleBtn').style.display = 'none';
+  }
+}
 
-      if (isAdminLoggedIn && adminUsername) {
-        // Admin giriş yapmışsa
-        document.getElementById('adminBtn').style.display = 'none';
-        document.getElementById('addBtn').style.display = 'block';
-        
-        // Admin ismini sağ üstte göster
-        const adminNameElement = document.getElementById('admin-name');
-        adminNameElement.textContent = 'Admin: ' + adminUsername;
-        adminNameElement.style.color = '#00ff00';
-        adminNameElement.style.textShadow = '0 0 5px rgba(0, 255, 0, 0.5)';
-        adminNameElement.style.fontSize = '18px';
-        adminNameElement.style.marginLeft = '10px';
-        
-        // Çıkış butonu ekle
-        const logoutBtn = document.createElement('button');
-        logoutBtn.textContent = 'Çıkış Yap';
-        logoutBtn.onclick = adminLogout;
-        logoutBtn.style.padding = '5px 10px';
-        logoutBtn.style.background = 'red';
-        logoutBtn.style.color = 'white';
-        logoutBtn.style.border = 'none';
-        logoutBtn.style.borderRadius = '5px';
-        logoutBtn.style.cursor = 'pointer';
-        logoutBtn.style.marginLeft = '10px';
-        document.querySelector('.menu-right').appendChild(logoutBtn);
+    const correctUsername = "harvey"; // Admin kullanıcı adı
+    const correctPassword = "1234";   // Admin şifresi
+    let editMode = false;
+    let currentEditingCard = null;
+    let cards = []; // Kart verilerini tutacak dizi
+
+    // Kart verilerini localStorage'dan yükle ve render et
+    function loadCards() {
+      const storedCards = localStorage.getItem("cardsData");
+      if (storedCards) {
+        cards = JSON.parse(storedCards);
       } else {
-        // Admin giriş yapmamışsa
-        document.getElementById('adminBtn').style.display = 'block';
-        document.getElementById('addBtn').style.display = 'none';
-        document.getElementById('admin-name').textContent = "";
+        // Örnek kart
+        cards = [
+          {
+            youtubeLink: "https://www.youtube.com/embed/867vvVPGaVM",
+            title: "Karma/Eray Mix redux",
+            description: "F MINIMAP DOES NOT SHOW, SWITCH TO DIRECTX 10 IN GRAPHICS SETTINGS.",
+            downloadLink: "https://drive.google.com/file/d/14TMr3TfmbiXC2ZL-k_nOiMBaG5wuOgnz/view?usp=drive_link"
+          }
+        ];
+        localStorage.setItem("cardsData", JSON.stringify(cards));
       }
+      renderCards();
+    }
+
+    // Kartları içerik konteynerine render et
+    function renderCards() {
+      const container = document.getElementById('contentContainer');
+      container.innerHTML = "";
+      cards.forEach((card, index) => {
+        const cardElem = createCardElement(card, index);
+        container.appendChild(cardElem);
+      });
+      if (localStorage.getItem("isAdmin") === "true") {
+        addAdminButtonsToAllCards();
+      }
+    }
+
+    // Bir kart öğesi oluşturur
+    function createCardElement(card, index) {
+      const cardElem = document.createElement('div');
+      cardElem.className = "content-card";
+      cardElem.setAttribute("data-index", index);
+      cardElem.innerHTML = `
+        <div class="video-wrapper">
+          <iframe src="${card.youtubeLink}?rel=0" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <h3>${card.title}</h3>
+        <p>${card.description}</p>
+        <a href="${card.downloadLink}" class="download-btn">Download</a>
+      `;
+      return cardElem;
+    }
+
+    function adminLogin() {
+      const username = document.getElementById('adminUsername').value;
+      const password = document.getElementById('adminPassword').value;
+      if (username === correctUsername && password === correctPassword) {
+        document.getElementById('adminLoginForm').style.display = 'none';
+        document.getElementById('adminBtn').style.display = 'none';
+        localStorage.setItem("isAdmin", "true");
+        document.getElementById('adminStatus').innerText = "Admin";
+        showAddContentButton();
+        addAdminButtonsToAllCards();
+      } else {
+        alert('Kullanıcı adı veya şifre hatalı!');
+      }
+    }
+
+    // "Ekle" butonunu admin girişi yaptıktan sonra ekler
+    function showAddContentButton() {
+      if (localStorage.getItem("isAdmin") === "true" && !document.getElementById("addContentButton")) {
+        let addContentButton = document.createElement('button');
+        addContentButton.id = "addContentButton";
+        addContentButton.innerHTML = "Ekle";
+        addContentButton.classList.add('btn', 'btn-success');
+        addContentButton.style.position = "fixed";
+        addContentButton.style.bottom = "10px";
+        addContentButton.style.right = "10px";
+        addContentButton.style.zIndex = "20";
+        addContentButton.onclick = function () {
+          editMode = false;
+          currentEditingCard = null;
+          document.getElementById('modalTitle').innerText = "Yeni Mod Ekle";
+          showAddContentModal();
+        };
+        document.body.appendChild(addContentButton);
+      }
+    }
+
+    // Tüm mevcut kartlara admin butonlarını ekler (Düzenle ve Sil)
+    function addAdminButtonsToAllCards() {
+      document.querySelectorAll('.content-card').forEach(card => {
+        appendAdminButtons(card);
+      });
+    }
+
+    // Düzenle ve Sil butonlarının bulunduğu konteyneri oluşturur
+    function appendAdminButtons(card) {
+      let container = card.querySelector('.admin-buttons');
+      if (!container) {
+        container = document.createElement('div');
+        container.classList.add('admin-buttons');
+        card.appendChild(container);
+      }
+      container.innerHTML = ""; // Önce temizle
+
+      // Düzenle butonu
+      let editBtn = document.createElement('button');
+      editBtn.innerText = "Düzenle";
+      editBtn.classList.add('edit-btn');
+      editBtn.onclick = function () {
+        openEditModal(card);
+      };
+
+      // Sil butonu
+      let deleteBtn = document.createElement('button');
+      deleteBtn.innerText = "Sil";
+      deleteBtn.classList.add('delete-btn');
+      deleteBtn.onclick = function () {
+        if (confirm("Bu kartı silmek istediğinize emin misiniz?")) {
+          let index = card.getAttribute("data-index");
+          cards.splice(index, 1);
+          localStorage.setItem("cardsData", JSON.stringify(cards));
+          renderCards();
+        }
+      };
+
+      container.appendChild(editBtn);
+      container.appendChild(deleteBtn);
+    }
+
+    // Düzenleme moduna geçerek, kart bilgilerini modal formda doldurur
+    function openEditModal(card) {
+      editMode = true;
+      currentEditingCard = card;
+      document.getElementById('modalTitle').innerText = "Mod Düzenle";
+      let iframe = card.querySelector('.video-wrapper iframe');
+      let youtubeSrc = iframe ? iframe.getAttribute('src') : "";
+      let youtubeLink = youtubeSrc.split('?')[0];
+      let titleElem = card.querySelector('h3');
+      let contentTitle = titleElem ? titleElem.innerText : "";
+      let descElem = card.querySelector('p');
+      let contentDescription = descElem ? descElem.innerText : "";
+      let downloadLinkElem = card.querySelector('.download-btn');
+      let downloadLink = downloadLinkElem ? downloadLinkElem.getAttribute('href') : "";
       
-      // Firebase bağlantısı varsa modları yükle
-      if (db) {
-        loadMods();
-      }
-    };
-
-    function showAdminLoginForm() {
-      document.getElementById('adminLoginForm').style.display = 'block';
+      document.getElementById('youtubeLink').value = youtubeLink;
+      document.getElementById('contentTitle').value = contentTitle;
+      document.getElementById('contentDescription').value = contentDescription;
+      document.getElementById('downloadLink').value = downloadLink;
+      showAddContentModal();
     }
 
-    function closeAdminForm() {
-      document.getElementById('adminLoginForm').style.display = 'none';
-    }
-
+    // Modal'ı göster
     function showAddContentModal() {
       document.getElementById('addContentModal').style.display = 'block';
     }
 
+    // Modal'ı gizle ve form alanlarını temizle
     function hideAddContentModal() {
       document.getElementById('addContentModal').style.display = 'none';
-      // Form alanlarını temizle
-      document.getElementById('youtubeLink').value = '';
-      document.getElementById('contentTitle').value = '';
-      document.getElementById('contentDescription').value = '';
-      document.getElementById('downloadLink').value = '';
+      document.getElementById('youtubeLink').value = "";
+      document.getElementById('contentTitle').value = "";
+      document.getElementById('contentDescription').value = "";
+      document.getElementById('downloadLink').value = "";
     }
 
+    // "Kaydet" butonuna basıldığında ekleme veya düzenleme işlemi yapar
     function saveContent() {
-      const youtubeLink = document.getElementById('youtubeLink').value;
-      const title = document.getElementById('contentTitle').value;
-      const description = document.getElementById('contentDescription').value;
-      const downloadLink = document.getElementById('downloadLink').value;
-
-      if (!youtubeLink || !title || !description || !downloadLink) {
-        alert('Lütfen tüm alanları doldurun!');
+      const youtubeLink = document.getElementById('youtubeLink').value.trim();
+      const contentTitle = document.getElementById('contentTitle').value.trim();
+      const contentDescription = document.getElementById('contentDescription').value.trim();
+      const downloadLink = document.getElementById('downloadLink').value.trim();
+      if (!youtubeLink || !contentTitle || !contentDescription || !downloadLink) {
+        alert("Lütfen tüm alanları doldurun!");
         return;
       }
-
-      // YouTube video ID'sini çıkar
-      let videoId = '';
-      if (youtubeLink.includes('youtube.com/watch?v=')) {
-        videoId = youtubeLink.split('v=')[1].split('&')[0];
-      } else if (youtubeLink.includes('youtu.be/')) {
-        videoId = youtubeLink.split('youtu.be/')[1].split('?')[0];
+      if (editMode && currentEditingCard) {
+        const index = currentEditingCard.getAttribute("data-index");
+        cards[index] = {
+          youtubeLink: youtubeLink,
+          title: contentTitle,
+          description: contentDescription,
+          downloadLink: downloadLink
+        };
+        editMode = false;
+        currentEditingCard = null;
+      } else {
+        cards.push({
+          youtubeLink: youtubeLink,
+          title: contentTitle,
+          description: contentDescription,
+          downloadLink: downloadLink
+        });
       }
-
-      // Yeni mod kartı oluştur
-      const contentContainer = document.getElementById('contentContainer');
-      const newCard = document.createElement('div');
-      newCard.className = 'content-card';
-      newCard.innerHTML = `
-        <div class="video-wrapper">
-          <img src="https://img.youtube.com/vi/${videoId}/maxresdefault.jpg" alt="${title}" style="width: 100%; height: 300px; object-fit: cover; border-radius: 5px;">
-        </div>
-        <h3>${title}</h3>
-        <p>${description}</p>
-        <a href="${downloadLink}" class="download-btn" target="_blank">Download</a>
-      `;
-
-      // Kartı container'a ekle
-      contentContainer.appendChild(newCard);
-
-      // Formu kapat ve temizle
+      localStorage.setItem("cardsData", JSON.stringify(cards));
+      renderCards();
       hideAddContentModal();
-      alert('Mod başarıyla eklendi!');
     }
 
     // Dosya arama: Kartların başlık ve açıklamasında arama yapar
@@ -528,133 +598,13 @@
       });
     }
 
-    // Giriş butonuna tıklama olayı ekle
-    document.getElementById('loginButton').addEventListener('click', function() {
-      const username = document.getElementById('adminUsername').value;
-      const password = document.getElementById('adminPassword').value;
-      
-      // Harvey kontrolü
-      if (username === correctUsername && password === correctPassword) {
-        handleSuccessfulLogin(username);
-      } else {
-        // Diğer adminler için kontrol
-        if (adminList.includes(username) && adminPasswords[username] === password) {
-          handleSuccessfulLogin(username);
-        } else {
-          alert('Kullanıcı adı veya şifre hatalı!');
-        }
-      }
-    });
-
-    // Başarılı giriş işlemleri
-    function handleSuccessfulLogin(username) {
-      document.getElementById('adminLoginForm').style.display = 'none';
-      document.getElementById('adminBtn').style.display = 'none';
-      document.getElementById('addBtn').style.display = 'block';
-      
-      // Admin ismini sağ üstte göster
-      const adminNameElement = document.getElementById('admin-name');
-      adminNameElement.textContent = 'Admin: ' + username;
-      adminNameElement.style.color = '#00ff00';
-      adminNameElement.style.textShadow = '0 0 5px rgba(0, 255, 0, 0.5)';
-      adminNameElement.style.fontSize = '18px';
-      adminNameElement.style.marginLeft = '10px';
-      
-      // Local storage'a kaydet
-      localStorage.setItem('isAdminLoggedIn', 'true');
-      localStorage.setItem('adminUsername', username);
-
-      // Başarılı giriş mesajı
-      alert('Giriş başarılı! Hoş geldiniz, ' + username + '.');
-    }
-
-    // Mod yükleme fonksiyonu
-    function uploadMod() {
-      const title = document.getElementById('modTitle').value;
-      const description = document.getElementById('modDescription').value;
-      const file = document.getElementById('modFile').files[0];
-      const image = document.getElementById('modImage').files[0];
-
-      if (!title || !description || !file || !image) {
-        alert('Lütfen tüm alanları doldurun!');
-        return;
-      }
-
-      // Dosya yükleme işlemi
-      const fileRef = storage.ref().child(`mods/${file.name}`);
-      const imageRef = storage.ref().child(`images/${image.name}`);
-
-      // Dosyaları yükle
-      Promise.all([
-        fileRef.put(file),
-        imageRef.put(image)
-      ]).then(([fileSnapshot, imageSnapshot]) => {
-        // Dosya URL'lerini al
-        const fileUrl = fileSnapshot.ref.getDownloadURL();
-        const imageUrl = imageSnapshot.ref.getDownloadURL();
-
-        // Her iki URL'yi de al
-        Promise.all([fileUrl, imageUrl]).then(([fileUrl, imageUrl]) => {
-          // Mod bilgilerini Firestore'a kaydet
-          db.collection('mods').add({
-            title: title,
-            description: description,
-            downloadUrl: fileUrl,
-            imageUrl: imageUrl,
-            uploadDate: new Date(),
-            uploader: localStorage.getItem('adminUsername') || 'Anonim'
-          }).then(() => {
-            alert('Mod başarıyla yüklendi!');
-            document.getElementById('modUploadForm').style.display = 'none';
-            loadMods(); // Mod listesini yenile
-          }).catch(error => {
-            console.error('Mod yükleme hatası:', error);
-            alert('Mod yüklenirken bir hata oluştu!');
-          });
-        });
-      }).catch(error => {
-        console.error('Dosya yükleme hatası:', error);
-        alert('Dosya yüklenirken bir hata oluştu!');
-      });
-    }
-
-    // Modları yükle
-    function loadMods() {
-      const modsContainer = document.getElementById('modsContainer');
-      modsContainer.innerHTML = ''; // Mevcut modları temizle
-
-      db.collection('mods').orderBy('uploadDate', 'desc').get().then((snapshot) => {
-        snapshot.forEach((doc) => {
-          const mod = doc.data();
-          const card = createModCard(mod);
-          modsContainer.appendChild(card);
-        });
-      }).catch(error => {
-        console.error('Modlar yüklenirken hata:', error);
-      });
-    }
-
-    // Mod kartı oluştur
-    function createModCard(mod) {
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.style.width = '300px';
-      card.style.margin = '10px';
-      card.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
-      card.style.color = 'white';
-      
-      card.innerHTML = `
-        <img src="${mod.imageUrl}" class="card-img-top" alt="${mod.title}" style="height: 200px; object-fit: cover;">
-        <div class="card-body">
-          <h5 class="card-title">${mod.title}</h5>
-          <p class="card-text">${mod.description}</p>
-          <p class="card-text"><small>Yükleyen: ${mod.uploader}</small></p>
-          <a href="${mod.downloadUrl}" class="btn btn-success" target="_blank">İndir</a>
-        </div>
-      `;
-      
-      return card;
-    }
+    window.onload = function () {
+      // Sayfa açılışında admin oturumunu temizleyelim
+      localStorage.removeItem("isAdmin");
+      document.getElementById('adminBtn').style.display = 'block';
+      document.getElementById('adminStatus').innerText = "";
+      loadCards();
+    };
   </script>
 
 </body>
