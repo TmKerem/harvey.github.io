@@ -1,225 +1,140 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GTA 5 Mods</title>
+  <title>THİRTYONE - Ana Sayfa</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <style>
+    /* Genel Ayarlar */
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
     body {
       font-family: Arial, sans-serif;
       background: #0a0a0a;
       color: white;
-      text-align: center;
-      height: 100vh;
       display: flex;
       flex-direction: column;
+      position: relative;
+      overflow: auto;
     }
-    /* Neon Arka Plan Efekti */
-    .neon-bg {
+    /* Arka Plan Video */
+    .video-container {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: radial-gradient(circle, rgba(0,255,0,0.1), rgba(0,255,0,0.2) 50%, rgba(0,0,0,0.5));
       z-index: -1;
-      animation: neonBgPulse 3s infinite alternate;
     }
-    /* Mevcut neon şekiller ve ekstra öğeler */
-    .neon-bg .neon-circle,
-    .neon-bg .neon-square,
-    .neon-bg .neon-triangle,
-    .neon-bg .neon-heart,
-    .neon-bg .neon-star,
-    .neon-bg .neon-diamond,
-    .neon-bg .extra-circle,
-    .neon-bg .extra-square,
-    .neon-bg .extra-triangle {
-      position: absolute;
-      background: rgba(0,255,0,0.6);
-      animation: pulseEffect 5s infinite alternate;
-    }
-    .neon-bg .neon-circle {
-      border-radius: 50%;
-      animation: circlePulse 5s infinite alternate;
-    }
-    .neon-bg .neon-square {
-      animation: squarePulse 6s infinite alternate;
-    }
-    .neon-bg .neon-triangle {
-      width: 0;
-      height: 0;
-      border-left: 60px solid transparent;
-      border-right: 60px solid transparent;
-      border-bottom: 120px solid rgba(0,255,0,0.6);
-      animation: trianglePulse 5s infinite alternate;
-    }
-    .neon-bg .neon-heart {
-      width: 100px;
-      height: 100px;
-      background: linear-gradient(45deg, #ff0000, #ff7f7f);
-      clip-path: polygon(50% 0%, 100% 40%, 80% 100%, 50% 70%, 20% 100%, 0% 40%);
-      animation: heartPulse 5s infinite alternate;
-    }
-    .neon-bg .neon-star {
-      width: 100px;
-      height: 100px;
-      background: radial-gradient(circle, #ff0 10%, transparent 10%);
-      background-size: 50% 50%;
-      animation: starPulse 5s infinite alternate;
-    }
-    .neon-bg .neon-diamond {
-      width: 100px;
-      height: 100px;
-      background: #00FFFF;
-      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-      animation: diamondPulse 6s infinite alternate;
-    }
-    .neon-bg .extra-circle {
-      border-radius: 50%;
-      animation: circlePulse 5s infinite alternate;
-    }
-    .neon-bg .extra-square {
-      animation: squarePulse 6s infinite alternate;
-    }
-    .neon-bg .extra-triangle {
-      width: 0;
-      height: 0;
-      border-left: 60px solid transparent;
-      border-right: 60px solid transparent;
-      border-bottom: 120px solid rgba(0,255,0,0.6);
-      animation: trianglePulse 5s infinite alternate;
-    }
-    /* Keyframes Animasyonları */
-    @keyframes neonBgPulse {
-      0% { opacity: 0.5; }
-      100% { opacity: 1; }
-    }
-    @keyframes pulseEffect {
-      0% { transform: scale(0.5); }
-      100% { transform: scale(1.5); }
-    }
-    @keyframes circlePulse {
-      0% { width: 100px; height: 100px; top: 10%; left: 10%; }
-      50% { width: 200px; height: 200px; top: 30%; left: 30%; }
-      100% { width: 100px; height: 100px; top: 10%; left: 10%; }
-    }
-    @keyframes squarePulse {
-      0% { width: 150px; height: 150px; top: 50%; left: 60%; }
-      50% { width: 250px; height: 250px; top: 40%; left: 50%; }
-      100% { width: 150px; height: 150px; top: 50%; left: 60%; }
-    }
-    @keyframes trianglePulse {
-      0% { top: 10%; left: 70%; border-bottom-width: 120px; }
-      50% { top: 50%; left: 50%; border-bottom-width: 200px; }
-      100% { top: 10%; left: 70%; border-bottom-width: 120px; }
-    }
-    @keyframes heartPulse {
-      0% { top: 20%; left: 20%; width: 100px; height: 100px; }
-      50% { top: 40%; left: 40%; width: 150px; height: 150px; }
-      100% { top: 20%; left: 20%; width: 100px; height: 100px; }
-    }
-    @keyframes starPulse {
-      0% { top: 5%; left: 75%; width: 100px; height: 100px; }
-      50% { top: 30%; left: 50%; width: 150px; height: 150px; }
-      100% { top: 5%; left: 75%; width: 100px; height: 100px; }
-    }
-    @keyframes diamondPulse {
-      0% { top: 40%; left: 40%; width: 100px; height: 100px; }
-      50% { top: 60%; left: 60%; width: 200px; height: 200px; }
-      100% { top: 40%; left: 40%; width: 100px; height: 100px; }
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    @keyframes slideUp {
-      from { transform: translateY(100%); }
-      to { transform: translateY(0); }
-    }
-    /* Neon Şeritler */
-    header::after {
-      content: '';
-      position: absolute;
-      bottom: -5px;
-      left: 0;
+    .video-container video {
       width: 100%;
-      height: 5px;
-      background: linear-gradient(90deg, rgba(0,255,0,1) 0%, rgba(0,255,0,0.8) 50%, rgba(0,255,0,1) 100%);
-      animation: neonPulse 1.5s infinite alternate;
-      z-index: 1;
+      height: 100%;
+      object-fit: cover;
     }
-
-    footer::before {
-      content: '';
-      position: absolute;
-      top: -5px;
-      left: 0;
-      width: 100%;
-      height: 5px;
-      background: linear-gradient(90deg, rgba(0,255,0,1) 0%, rgba(0,255,0,0.8) 50%, rgba(0,255,0,1) 100%);
-      animation: neonPulseBright 1.5s infinite alternate;
-      z-index: 1;
-    }
-    @keyframes neonPulse {
-      0% { box-shadow: 0 0 20px rgba(0,255,0,1), 0 0 30px rgba(0,255,0,0.8), 0 0 40px rgba(0,255,0,0.6); }
-      100% { box-shadow: 0 0 30px rgba(0,255,0,1), 0 0 50px rgba(0,255,0,0.9), 0 0 60px rgba(0,255,0,0.5); }
-    }
-    @keyframes neonPulseBright {
-      0% { box-shadow: 0 0 30px rgba(0,255,0,1), 0 0 50px rgba(0,255,0,0.8), 0 0 60px rgba(0,255,0,0.7); }
-      100% { box-shadow: 0 0 40px rgba(0,255,0,1), 0 0 70px rgba(0,255,0,0.9), 0 0 80px rgba(0,255,0,0.6); }
-    }
-    /* Header ve Footer stilleri */
+    /* Header & Menü */
     header, footer {
-      background: #111;
+      background: rgba(0, 0, 0, 0.7);
       padding: 20px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
       position: relative;
     }
-    /* Header'ı ortaya almak için */
     header {
-      justify-content: center;
+      flex-direction: column;
     }
     nav {
       display: flex;
       gap: 20px;
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+      margin-top: 10px;
     }
     nav a {
       color: white;
       text-decoration: none;
       padding: 10px 15px;
       transition: background 0.3s;
-      display: inline-block;
     }
     nav a:hover {
       background: green;
       border-radius: 5px;
     }
-    /* Menüye sol tarafa logo ekleniyor */
     .logo {
       position: absolute;
       left: 20px;
       top: 50%;
       transform: translateY(-50%);
+      max-width: 200px;
     }
-    .logo video {
-      max-height: 60px;
+    /* Admin ismi (menüde ortada) */
+    #admin-name {
+      position: absolute;
+      top: 5px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: green;
+      font-size: 18px;
+      font-weight: bold;
     }
-    /* Gun Pack açılır menü */
+    /* Footer */
+    footer {
+      text-align: center;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px 0;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+    }
+    /* Admin Giriş Butonları (Koyu Yeşil, Yan Yana) */
+    #adminBtn, #modEkleBtn {
+      position: fixed;
+      bottom: 10px;
+      background-color: #006400;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 14px;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 20;
+    }
+    #adminBtn { right: 150px; }
+    #modEkleBtn { right: 10px; }
+    /* Gun Pack Menüsü */
+    #gun-pack {
+      position: relative;
+      background: none;
+      padding: 0;
+      box-shadow: none;
+      z-index: 2;
+    }
+    #gun-pack a {
+      display: inline-block;
+      padding: 15px 20px;
+      color: white;
+      font-size: 18px;
+      text-decoration: none;
+    }
     #gun-pack-options {
       display: none;
       position: absolute;
       top: 100%;
       left: 0;
-      background: #222;
+      background: #444;
+      width: 100%;
+      padding: 10px;
       border-radius: 5px;
-      width: 200px;
-      z-index: 100;
-      box-shadow: 0 0 10px rgba(0,255,0,0.5);
+      z-index: 5;
     }
     #gun-pack:hover #gun-pack-options {
       display: block;
@@ -227,181 +142,108 @@
     #gun-pack-options a {
       color: white;
       text-decoration: none;
-      padding: 10px;
       display: block;
-      border-bottom: 1px solid #444;
+      padding: 5px;
+      font-size: 16px;
     }
     #gun-pack-options a:hover {
       background: green;
     }
-    .mod-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-grow: 1;
-      gap: 20px;
-      width: 100%;
-      flex-wrap: wrap;
-      animation: slideUp 1.5s ease-in-out forwards;
-      z-index: 2;
-    }
-    .mod-card {
-      background: #222;
-      padding: 15px;
-      border-radius: 10px;
-      flex: 1;
-      min-width: 250px;
-      max-width: 400px;
-      box-shadow: 0 0 10px rgba(0,255,0,0.5);
-      border: 2px solid transparent;
-      transition: border-color 0.3s;
-    }
-    .mod-card:hover {
-      border-color: rgba(0,255,0,1);
-    }
-    .download-btn {
-      display: block;
-      margin-top: 10px;
-      padding: 10px;
-      background: green;
-      color: white;
-      text-decoration: none;
-      border-radius: 5px;
-    }
-    footer {
-  text-align: center;
-  color: white;
-  z-index: 2;
-  display: flex;
-  justify-content: center; /* Ortalamayı sağlar */
-  align-items: center; /* Yükseklik olarak ortalar */
-}
-
-    footer p {
-      margin-top: 20px;
-      text-align: center;
-    }
-    .basketball, .star, .heart, .cube {
+    /* Admin Giriş Formu */
+    .admin-login-form {
       position: absolute;
-      width: 100px;
-      height: 100px;
-      background-color: #00FF00;
-      border-radius: 50%;
-      box-shadow: 0 0 20px rgba(0,255,0,1), 0 0 30px rgba(0,255,0,0.8), 0 0 40px rgba(0,255,0,0.6);
-      cursor: grab;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0,0,0,0.7);
+      padding: 20px;
+      border-radius: 10px;
       z-index: 10;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 14px;
-      font-weight: bold;
-      color: white;
-      text-align: center;
-      line-height: 1.2;
     }
-    .top-btn {
-      display: none;
-    }
+    .hidden { display: none; }
   </style>
 </head>
 <body>
-  <div class="neon-bg">
-    <div class="neon-circle"></div>
-    <div class="neon-square"></div>
-    <div class="neon-triangle"></div>
-    <div class="neon-heart"></div>
-    <div class="neon-star"></div>
-    <div class="neon-diamond"></div>
-    <div class="extra-circle"></div>
-    <div class="extra-circle"></div>
-    <div class="extra-square"></div>
-    <div class="extra-square"></div>
-    <div class="extra-triangle"></div>
-    <div class="extra-triangle"></div>
+  <!-- Arka Plan Video -->
+  <div class="video-container">
+    <video autoplay muted loop>
+      <source src="arka plan.mp4" type="video/mp4">
+    </video>
   </div>
-  
+  <!-- Header & Menü -->
   <header>
-    <!-- Sol tarafa video yerleştiriliyor -->
     <div class="logo">
       <a href="index.html">
-          <img src="Thirtyone.png" width="200"  height="200">
+        <img src="Thirtyone.png" width="200" height="200" alt="Logo">
       </a>
     </div>
     <nav>
-      <div class="d-flex justify-content-center w-100">
-        <a href="index.html" class="text-white text-decoration-none">Home</a>
-        <a href="Standard%20Files.html" class="text-white text-decoration-none">Standard Files</a>
-        <a href="#redux" class="text-white text-decoration-none">Redux</a>
-        <div id="gun-pack" class="text-white text-decoration-none" style="position: relative;">
-          <a href="#" class="text-white">Gun Pack</a>
-          <div id="gun-pack-options">
-            <a href="#">AKM</a>
-            <a href="#">Carbin</a>
-            <a href="#">Pistol</a>
-          </div>
+      <a href="index.html">Home</a>
+      <a href="Standard%20Files.html">Standard Files</a>
+      <a href="redux.html">Redux</a>
+      <div id="gun-pack" class="text-white text-decoration-none">
+        <a href="#">Gun Pack</a>
+        <div id="gun-pack-options">
+          <a href="#">AKM</a>
+          <a href="#">Carbin</a>
+          <a href="#">Pistol</a>
         </div>
       </div>
+      <div id="admin-name"></div>
     </nav>
   </header>
-  
-  <!-- Ön içerik -->
-  <div id="basketball-container"></div>
-  <!-- Top butonu kodda mevcut fakat CSS ile gizlenmiş durumda -->
-  <button class="top-btn" id="topButton">Top</button>
-  <section id="home" class="mod-container">
-    <div class="mod-card">
-      <h3>Standard Files</h3>
-      <p>Necessary standard files for GTA 5.</p>
-      <a href="Standard%20Files.html" class="download-btn">Go</a>
-    </div>
-    <div class="mod-card">
-      <h3>Redux</h3>
-      <p>Redux mod enhances GTA 5 graphics.</p>
-      <a href="#redux" class="download-btn">Go</a>
-    </div>
-    <div class="mod-card">
-      <h3>Gun Pack</h3>
-      <p>New weapon packs for GTA 5.</p>
-      <a href="#gun-pack" class="download-btn">Go</a>
-    </div>
-  </section>
-  
-  <footer >
+  <!-- İçerik Bölgesi (Örneğin mod kartları vs.) -->
+  <div class="content-container" id="contentContainer">
+    <!-- Kartlar localStorage'dan yüklenecek -->
+  </div>
+  <!-- Admin Giriş Butonları -->  
+  <button id="adminBtn" onclick="showAdminLoginForm()">Admin Girişi</button>
+  <button id="modEkleBtn" onclick="window.location.href='redux.html'">Mod Ekle</button>
+  <!-- Footer -->
+  <footer>
     <p>&copy; 2025 GTA 5 Mods</p>
   </footer>
-  
+  <!-- Admin Giriş Formu (Başlangıçta Gizli) -->
+  <div id="adminLoginForm" class="admin-login-form hidden">
+    <h4>Admin Girişi</h4>
+    <input type="text" id="adminUsername" placeholder="Kullanıcı Adı" class="form-control mb-2">
+    <input type="password" id="adminPassword" placeholder="Şifre" class="form-control mb-2">
+    <button onclick="adminLogin()" class="btn btn-success w-100">Giriş Yap</button>
+  </div>
   <script>
-    function selectGunPack(gun) {
-      alert("Seçilen silah: " + gun);
-    }
-    let topCreated = false;
-    let topClickCount = 0;
-    document.getElementById('topButton').addEventListener('click', function() {
-      if (!topCreated) {
-        const objectTypes = ['basketball', 'star', 'heart', 'cube'];
-        const objectType = objectTypes[Math.floor(Math.random() * objectTypes.length)];
-        const object = document.createElement('div');
-        object.classList.add(objectType);
-        object.innerText = objectType.charAt(0).toUpperCase() + objectType.slice(1);
-        const randomX = Math.random() * (window.innerWidth - 100);
-        const randomY = Math.random() * (window.innerHeight - 100);
-        object.style.left = `${randomX}px`;
-        object.style.top = `${randomY}px`;
-        document.getElementById('basketball-container').appendChild(object);
-        topCreated = true;
-        object.addEventListener('click', function() {
-          topClickCount++;
-          if (topClickCount >= 3) {
-            object.style.boxShadow = '0 0 30px rgba(0,255,0,1), 0 0 50px rgba(0,255,0,0.9), 0 0 60px rgba(0,255,0,0.5)';
-            setTimeout(() => { object.style.display = 'none'; }, 500);
-          }
-        });
-        setTimeout(() => {
-          object.remove();
-          topCreated = false;
-        }, 5000);
+    const correctUsername = "harvey";
+    const correctPassword = "1234";
+    
+    // Sayfa açıldığında sessionStorage'da admin girişi varsa, admin durumu devam etsin
+    window.onload = function() {
+      if (sessionStorage.getItem('isAdminLoggedIn') === 'true') {
+        document.getElementById('modEkleBtn').style.display = 'block';
+        document.getElementById('admin-name').textContent = `Admin: ${sessionStorage.getItem('adminUsername')}`;
+      } else {
+        document.getElementById('modEkleBtn').style.display = 'none';
+        document.getElementById('admin-name').textContent = "";
       }
-    });
+      // loadCards() gibi diğer işlevler de çağrılabilir
+    };
+  
+    function showAdminLoginForm() {
+      document.getElementById('adminLoginForm').classList.remove('hidden');
+    }
+  
+    function adminLogin() {
+      const username = document.getElementById('adminUsername').value;
+      const password = document.getElementById('adminPassword').value;
+      if (username === correctUsername && password === correctPassword) {
+        document.getElementById('adminLoginForm').classList.add('hidden');
+        document.getElementById('adminBtn').style.display = 'none';
+        document.getElementById('modEkleBtn').style.display = 'block';
+        document.getElementById('admin-name').textContent = `Admin: ${username}`;
+        sessionStorage.setItem('isAdminLoggedIn', 'true');
+        sessionStorage.setItem('adminUsername', username);
+      } else {
+        alert('Kullanıcı adı veya şifre hatalı!');
+      }
+    }
   </script>
 </body>
 </html>
