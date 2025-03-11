@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GTA5 Silahları - GTA5 Mods</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="background-animation"></div>
+    <div id="neon-circles"></div>
+
+    <nav>
+        <div class="nav-container">
+            <div class="logo-container">
+                <img src="https://www.freepnglogos.com/uploads/gta-5-logo-png/grand-theft-auto-v-1.png" alt="GTA5 Logo" class="logo">
+                <span class="brand-name neon-text">GTA5</span>
+            </div>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Ana Sayfa</a>
+                <a href="game-files.html" class="nav-link">Standard Files</a>
+                <a href="redux.html" class="nav-link">Redux</a>
+                <div class="dropdown">
+                    <a href="gun-pack.html" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Silah Paketi</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="weapons.html">GTA 5 Silahları</a></li>
+                        <li><a class="dropdown-item" href="weapons.html#pistol">Combat Pistol</a></li>
+                        <li><a class="dropdown-item" href="weapons.html#rifle">Assault Rifle</a></li>
+                        <li><a class="dropdown-item" href="weapons.html#sniper">Sniper Rifle</a></li>
+                        <li><a class="dropdown-item" href="weapons.html#shotgun">Shotgun</a></li>
+                    </ul>
+                </div>
+                <a href="admin-log.html" class="admin-only">Admin Log</a>
+            </div>
+            <div class="search-admin-container">
+                <div class="search-container">
+                    <input type="text" placeholder="Dosya Ara...">
+                </div>
+                <a href="admin.html" class="admin-link">Admin Girişi</a>
+                <span id="adminName" class="admin-name"></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="neon-line"></div>
+
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-12">
+                <div class="card custom-card">
+                    <div class="card-body">
+                        <h2 class="card-title neon-text mb-4">GTA5 Silahları</h2>
+                        
+                        <!-- Admin Kontrol Paneli -->
+                        <div class="admin-only mb-5">
+                            <button class="btn go-button" id="addWeaponBtn">Yeni Silah Ekle</button>
+                            <div id="weaponForm" style="display: none;" class="mt-3">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control mb-2" id="weaponName" placeholder="Silah Adı">
+                                        <input type="text" class="form-control mb-2" id="weaponDesc" placeholder="Açıklama">
+                                        <select class="form-control mb-2" id="weaponType">
+                                            <option value="pistol">Combat Pistol</option>
+                                            <option value="rifle">Assault Rifle</option>
+                                            <option value="sniper">Sniper Rifle</option>
+                                            <option value="shotgun">Shotgun</option>
+                                        </select>
+                                        <button class="btn go-button" id="saveWeaponBtn">Kaydet</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Silah Kartları -->
+                        <div id="weaponCards">
+                            <!-- Kartlar dinamik olarak eklenecek -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="mt-5">
+        <div class="footer-content">
+            <p>GTA5 Mod Açıklamaları</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
+    <script>
+        // Admin durumu kontrolü
+        function checkAdminStatus() {
+            const adminName = localStorage.getItem('adminName');
+            const isAdmin = localStorage.getItem('isAdmin');
+            
+            if (adminName && isAdmin === 'true') {
+                document.body.classList.add('is-admin');
+                const adminNameSpan = document.getElementById('adminName');
+                if (adminNameSpan) {
+                    adminNameSpan.textContent = `Admin: ${adminName}`;
+                }
+                
+                const adminLink = document.querySelector('.admin-link');
+                if (adminLink) {
+                    adminLink.textContent = 'Çıkış Yap';
+                    adminLink.classList.add('admin-logout');
+                    adminLink.href = '#';
+                    adminLink.onclick = function(e) {
+                        e.preventDefault();
+                        // Admin çıkışı yap
+                        localStorage.removeItem('adminName');
+                        localStorage.removeItem('isAdmin');
+                        
+                        // Log kaydı oluştur
+                        const logs = JSON.parse(localStorage.getItem('adminLogs') || '[]');
+                        logs.unshift({
+                            timestamp: new Date().toISOString(),
+                            action: `Admin çıkış yaptı: ${adminName}`
+                        });
+                        localStorage.setItem('adminLogs', JSON.stringify(logs));
+                        
+                        // Sayfayı yenile
+                        window.location.reload();
+                    };
+                }
+
+                // Log kaydı
+                const logs = JSON.parse(localStorage.getItem('adminLogs') || '[]');
+                logs.unshift({
+                    timestamp: new Date().toISOString(),
+                    action: 'Silahlar sayfasına erişim sağlandı'
+                });
+                localStorage.setItem('adminLogs', JSON.stringify(logs));
+            }
+        }
+
+        // Sayfa yüklendiğinde admin durumunu kontrol et
+        window.onload = function() {
+            checkAdminStatus();
+            createNeonCircles();
+            loadWeapons();
+        }
+
+        // Silah kartları yönetimi
+        function loadWeapons() {
+            const weapons = JSON.parse(localStorage.getItem('weapons') || '[]');
+            const container = document.getElementById('weaponCards');
+            container.innerHTML = '';
+
+            const types = ['pistol', 'rifle', 'sniper', 'shotgun'];
+            const typeNames = {
+                pistol: 'Combat Pistol',
+                rifle: 'Assault Rifle',
+                sniper: 'Sniper Rifle',
+                shotgun: 'Shotgun'
+            };
+
+            types.forEach(type => {
+                const typeWeapons = weapons.filter(w => w.type === type);
+                const section = document.createElement('div');
+                section.id = type;
+                section.className = 'row g-4 mb-5';
+                section.innerHTML = `
+                    <h3 class="neon-text mb-4">${typeNames[type]}</h3>
+                    ${typeWeapons.map(weapon => `
+                        <div class="col-md-6">
+                            <div class="card custom-card h-100">
+                                <div class="card-body d-flex flex-column">
+                                    <h4 class="card-title">${weapon.name}</h4>
+                                    <p class="card-text">${weapon.description}</p>
+                                    <button class="btn go-button mt-auto">İNDİR</button>
+                                    ${localStorage.getItem('adminName') ? `
+                                        <button class="btn btn-danger mt-2" onclick="deleteWeapon('${weapon.id}')">Sil</button>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                `;
+                container.appendChild(section);
+            });
+        }
+
+        // Yeni silah ekleme
+        document.getElementById('addWeaponBtn')?.addEventListener('click', function() {
+            document.getElementById('weaponForm').style.display = 'block';
+        });
+
+        document.getElementById('saveWeaponBtn')?.addEventListener('click', function() {
+            const name = document.getElementById('weaponName').value;
+            const description = document.getElementById('weaponDesc').value;
+            const type = document.getElementById('weaponType').value;
+
+            if (name && description && type) {
+                const weapons = JSON.parse(localStorage.getItem('weapons') || '[]');
+                weapons.push({
+                    id: Date.now().toString(),
+                    name,
+                    description,
+                    type
+                });
+                localStorage.setItem('weapons', JSON.stringify(weapons));
+
+                // Log kaydı
+                const logs = JSON.parse(localStorage.getItem('adminLogs') || '[]');
+                logs.unshift({
+                    timestamp: new Date().toISOString(),
+                    action: `Yeni silah eklendi: ${name}`
+                });
+                localStorage.setItem('adminLogs', JSON.stringify(logs));
+
+                // Formu temizle ve gizle
+                document.getElementById('weaponName').value = '';
+                document.getElementById('weaponDesc').value = '';
+                document.getElementById('weaponForm').style.display = 'none';
+
+                // Kartları yeniden yükle
+                loadWeapons();
+            }
+        });
+
+        // Silah silme
+        function deleteWeapon(id) {
+            if (confirm('Bu silahı silmek istediğinize emin misiniz?')) {
+                const weapons = JSON.parse(localStorage.getItem('weapons') || '[]');
+                const weaponToDelete = weapons.find(w => w.id === id);
+                const updatedWeapons = weapons.filter(w => w.id !== id);
+                localStorage.setItem('weapons', JSON.stringify(updatedWeapons));
+
+                // Log kaydı
+                const logs = JSON.parse(localStorage.getItem('adminLogs') || '[]');
+                logs.unshift({
+                    timestamp: new Date().toISOString(),
+                    action: `Silah silindi: ${weaponToDelete.name}`
+                });
+                localStorage.setItem('adminLogs', JSON.stringify(logs));
+
+                // Kartları yeniden yükle
+                loadWeapons();
+            }
+        }
+
+        function createNeonCircles() {
+            const container = document.getElementById('neon-circles');
+            const numCircles = 5;
+            for (let i = 0; i < numCircles; i++) {
+                const circle = document.createElement('div');
+                circle.className = 'neon-circle';
+                circle.style.width = Math.random() * 100 + 50 + 'px';
+                circle.style.height = circle.style.width;
+                circle.style.left = Math.random() * 100 + 'vw';
+                circle.style.top = Math.random() * 100 + 'vh';
+                circle.style.animationDelay = Math.random() * 5 + 's';
+                container.appendChild(circle);
+            }
+        }
+    </script>
+</body>
+</html> 

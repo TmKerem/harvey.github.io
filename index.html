@@ -1,743 +1,330 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <title>THİRTYONE - Ana Sayfa</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
-  <style>
-    /* Genel Ayarlar */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      overflow-x: hidden;
-      position: relative;
-    }
-    body {
-      font-family: Arial, sans-serif;
-      background: #0a0a0a;
-      color: white;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      position: relative;
-    }
-    /* Arka Plan Video */
-    .video-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      overflow: hidden;
-    }
-    .video-container video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-    /* Header & Menü */
-    header, footer {
-      background: rgba(0, 0, 0, 0.7);
-      padding: 20px;
-      display: flex;
-      align-items: center;
-      position: relative;
-    }
-    header {
-      flex-direction: column;
-    }
-    nav {
-      display: flex;
-      gap: 20px;
-      width: 100%;
-      justify-content: center;
-      align-items: center;
-      margin-top: 10px;
-    }
-    nav a {
-      color: white;
-      text-decoration: none;
-      padding: 10px 15px;
-      transition: background 0.3s;
-    }
-    nav a:hover {
-      background: green;
-      border-radius: 5px;
-    }
-    .logo {
-      position: absolute;
-      left: 20px;
-      top: 50%;
-      transform: translateY(-50%);
-      max-width: 200px;
-    }
-    /* Menu Right */
-    .menu-right {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      flex: 1;
-      justify-content: center;
-      position: absolute;
-      right: 20px;
-      top: 50%;
-      transform: translateY(-50%);
-    }
-    /* Admin durumu */
-    #admin-name {
-      font-size: 18px;
-      color: #00ff00;
-      margin-left: 10px;
-      text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
-    }
-    /* Admin Butonları */
-    .admin-button {
-      padding: 5px 10px;
-      border: none;
-      border-radius: 3px;
-      cursor: pointer;
-      margin: 2px;
-      font-size: 12px;
-      transition: all 0.3s ease;
-    }
-    .edit-button {
-      background: #ffa500;
-      color: white;
-    }
-    .delete-button {
-      background: #ff0000;
-      color: white;
-    }
-    .logout-button {
-      background: #8B0000;
-      color: white;
-      padding: 8px 15px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-left: 10px;
-      font-size: 14px;
-    }
-    .admin-button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
-    }
-    /* Footer */
-    footer {
-      text-align: center;
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 10px 0;
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      z-index: 10;
-    }
-    /* Admin Giriş Butonları (Koyu Yeşil, Yan Yana) */
-    #adminBtn, #modEkleBtn {
-      position: fixed;
-      bottom: 10px;
-      background-color: #006400;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      font-size: 14px;
-      border-radius: 5px;
-      cursor: pointer;
-      z-index: 20;
-    }
-    #adminBtn { right: 40px; }
-    #modEkleBtn { right: 170px; }
-    /* Gun Pack Menüsü */
-    #gun-pack {
-      position: relative;
-      background: none;
-      padding: 0;
-      box-shadow: none;
-      z-index: 2;
-    }
-    #gun-pack a {
-      display: inline-block;
-      padding: 15px 20px;
-      color: white;
-      font-size: 18px;
-      text-decoration: none;
-    }
-    #gun-pack-options {
-      display: none;
-      position: absolute;
-      top: 100%;
-      left: 0;
-      background: #444;
-      width: 100%;
-      padding: 10px;
-      border-radius: 5px;
-      z-index: 5;
-    }
-    #gun-pack:hover #gun-pack-options {
-      display: block;
-    }
-    #gun-pack-options a {
-      color: white;
-      text-decoration: none;
-      display: block;
-      padding: 5px;
-      font-size: 16px;
-    }
-    #gun-pack-options a:hover {
-      background: green;
-    }
-    /* Animasyonlu Kartlar */
-    .animated-content {
-      display: flex;
-      justify-content: center;
-      gap: 50px;
-      padding: 40px;
-      margin-top: 100px;
-      flex-wrap: wrap;
-      min-height: calc(100vh - 400px);
-      align-items: center;
-    }
-    .main-cards {
-      display: flex;
-      justify-content: center;
-      gap: 50px;
-      width: 100%;
-      flex-wrap: wrap;
-    }
-    .admin-list-container {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      margin-top: 50px;
-    }
-    .admin-list-card {
-      width: 400px;
-      height: auto;
-      min-height: 300px;
-    }
-    .animated-card {
-      background: rgba(0, 0, 0, 0.7);
-      padding: 30px;
-      border-radius: 20px;
-      text-align: center;
-      color: white;
-      width: 400px;
-      height: 300px;
-      animation: fadeInUp 1s ease-out;
-      transition: all 0.3s ease;
-      text-decoration: none;
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
-    }
-    .animated-card:hover {
-      transform: translateY(-10px) scale(1.05);
-      background: linear-gradient(45deg, #1a1a1a, #2a2a2a, #1a1a1a, #2a2a2a);
-      background-size: 400% 400%;
-      animation: gradientBG 3s ease infinite;
-      box-shadow: 0 0 30px rgba(0, 255, 0, 0.5);
-    }
-    .animated-card h3 {
-      font-size: 32px;
-      margin-bottom: 20px;
-      color: #00ff00;
-      text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
-    }
-    .animated-card p {
-      font-size: 18px;
-      color: #ffffff;
-      margin-bottom: 20px;
-    }
-    .go-button {
-      background: linear-gradient(to right, #00ff00, #008000);
-      color: #000;
-      padding: 15px;
-      border-radius: 0 0 20px 20px;
-      font-size: 22px;
-      font-weight: bold;
-      text-decoration: none;
-      transition: all 0.3s ease;
-      border: none;
-      cursor: pointer;
-      box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
-      width: calc(100% + 60px);
-      margin: 0 -30px -30px -30px;
-      position: relative;
-      overflow: hidden;
-    }
-    .go-button:hover {
-      background: linear-gradient(to right, #008000, #00ff00);
-      transform: scale(1.02);
-      box-shadow: 0 0 20px rgba(0, 255, 0, 0.7);
-    }
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    @keyframes gradientBG {
-      0% {
-        background-position: 0% 50%;
-      }
-      50% {
-        background-position: 100% 50%;
-      }
-      100% {
-        background-position: 0% 50%;
-      }
-    }
-    .animated-card:nth-child(1) { animation-delay: 0.2s; }
-    .animated-card:nth-child(2) { animation-delay: 0.4s; }
-    .animated-card:nth-child(3) { animation-delay: 0.6s; }
-    .gun-pack-card {
-      cursor: pointer;
-    }
-    /* Content Container */
-    .content-container {
-      flex: 1;
-      padding-bottom: 60px; /* Footer yüksekliği kadar padding ekle */
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GTA5 Mods</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="style.css" rel="stylesheet">
+    <link href="animations.css" rel="stylesheet">
+    <link href="standard-files.css" rel="stylesheet">
+    <style>
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-toggle::after {
+            display: none;
+        }
+
+        .dropdown-menu {
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid var(--neon-orange);
+            margin-top: 0;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            white-space: nowrap;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-size: 15px;
+            padding: 5px 10px;
+        }
+
+        .search-admin-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .search-container input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 107, 0, 0.5);
+            color: #fff;
+            padding: 8px 15px;
+            width: 200px;
+            max-width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                padding: 10px;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                text-align: center;
+                gap: 10px;
+            }
+
+            .search-admin-container {
+                flex-direction: column;
+                gap: 10px;
+                align-items: center;
+            }
+        }
+    </style>
 </head>
-<body>
-  <!-- Arka Plan Video -->
-  <div class="video-container">
-    <video autoplay muted loop>
-      <source src="arka plan.mp4" type="video/mp4">
-    </video>
-  </div>
-  <!-- Header & Menü -->
-  <header>
-    <div class="logo">
-      <a href="index.html">
-        <img src="Thirtyone.png" width="200" height="200" alt="Logo">
-      </a>
-    </div>
+<body class="page-transition">
+    <!-- Background Elements -->
+    <div class="background-grid"></div>
+    <div class="neon-lights" id="neonLights"></div>
+
+    <!-- Navigation Bar -->
     <nav>
-      <a href="index.html">Home</a>
-      <a href="Standard%20Files.html">Standard Files</a>
-      <a href="redux.html">Redux</a>
-      <div id="gun-pack" class="text-white text-decoration-none">
-        <a href="#">Gun Pack</a>
-        <div id="gun-pack-options">
-          <a href="#">AKM</a>
-          <a href="#">Carbin</a>
-          <a href="#">Pistol</a>
-        </div>
-      </div>
-    </nav>
-    <div class="menu-right">
-      <span id="admin-name"></span>
-      <button id="logoutBtn" class="logout-button" onclick="adminLogout()" style="display: none;">Çıkış Yap</button>
-    </div>
-  </header>
-  <!-- İçerik Bölgesi (Örneğin mod kartları vs.) -->
-  <div class="content-container" id="contentContainer">
-    <!-- Animasyonlu Menü Kartları -->
-    <div class="animated-content">
-      <div class="main-cards">
-        <div class="animated-card">
-          <h3>Standard Files</h3>
-          <p>View standard mod files</p>
-          <a href="Standard%20Files.html" class="go-button">GO</a>
-        </div>
-        <div class="animated-card">
-          <h3>Redux</h3>
-          <p>Explore Redux mods</p>
-          <a href="redux.html" class="go-button">GO</a>
-        </div>
-        <div class="animated-card gun-pack-card">
-          <h3>Gun Pack</h3>
-          <p>Browse weapon mods</p>
-          <button class="go-button" onclick="toggleGunPack()">GO</button>
-        </div>
-      </div>
-      <div class="admin-list-container">
-        <div class="animated-card admin-list-card" id="adminListCard" style="display: none;">
-          <h3>Admin Listesi</h3>
-          <div id="adminListContent" style="overflow-y: auto; max-height: 200px; margin-bottom: 20px;">
-            <!-- Admin listesi buraya dinamik olarak eklenecek -->
-          </div>
-          <button class="go-button" onclick="refreshAdminList()">Yenile</button>
-        </div>
-      </div>
-    </div>
-    <!-- Mod Kartları -->
-  </div>
-
-  <!-- Admin Giriş Butonları -->  
-  <button id="adminBtn" onclick="showAdminLoginForm()" style="position: fixed; bottom: 10px; right: 40px; padding: 10px 20px; background: green; color: white; border: none; border-radius: 5px; z-index: 20;">Admin Girişi</button>
-  <button id="modEkleBtn" onclick="window.location.href='redux.html'" style="position: fixed; bottom: 10px; right: 170px; padding: 10px 20px; background: #006400; color: white; border: none; border-radius: 5px; z-index: 20; display: none; width: 130px;">Mod Ekle</button>
-  <button id="adminEkleBtn" onclick="showAddAdminForm()" style="position: fixed; bottom: 10px; right: 300px; padding: 10px 20px; background: #8B0000; color: white; border: none; border-radius: 5px; z-index: 20; display: none; width: 130px;">Admin Ekle</button>
-
-  <!-- Admin Giriş Formu -->
-  <div id="adminLoginForm" style="display:none; position: fixed; bottom: 20px; right: 20px; background: rgba(0, 0, 0, 0.9); padding: 20px; border-radius: 10px; z-index: 1000; box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);">
-    <div style="position: relative;">
-      <button onclick="closeAdminForm()" style="position: absolute; right: -10px; top: -10px; background: red; color: white; border: none; border-radius: 50%; width: 25px; height: 25px; cursor: pointer; font-size: 16px;">×</button>
-      <h4 style="color: white; margin-bottom: 15px;">Admin Girişi</h4>
-      <input type="text" id="adminUsername" placeholder="Kullanıcı Adı" style="margin-bottom: 10px; padding: 8px; width: 100%; background: #333; border: 1px solid #555; color: white; border-radius: 5px;">
-      <input type="password" id="adminPassword" placeholder="Şifre" style="margin-bottom: 10px; padding: 8px; width: 100%; background: #333; border: 1px solid #555; color: white; border-radius: 5px;">
-      <button type="button" onclick="adminLogin()" style="width: 100%; padding: 10px; background: green; color: white; border: none; border-radius: 5px; cursor: pointer;">Giriş Yap</button>
-    </div>
-  </div>
-
-  <!-- Admin Ekleme Formu -->
-  <div id="addAdminForm" style="display:none; position: fixed; bottom: 20px; right: 20px; background: rgba(0, 0, 0, 0.9); padding: 20px; border-radius: 10px; z-index: 1000; box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);">
-    <div style="position: relative;">
-      <button onclick="closeAddAdminForm()" style="position: absolute; right: -10px; top: -10px; background: red; color: white; border: none; border-radius: 50%; width: 25px; height: 25px; cursor: pointer; font-size: 16px;">×</button>
-      <h4 style="color: white; margin-bottom: 15px;">Yeni Admin Ekle</h4>
-      <input type="text" id="newAdminUsername" placeholder="Yeni Admin Kullanıcı Adı" style="margin-bottom: 10px; padding: 8px; width: 100%; background: #333; border: 1px solid #555; color: white; border-radius: 5px;">
-      <input type="password" id="newAdminPassword" placeholder="Yeni Admin Şifresi" style="margin-bottom: 10px; padding: 8px; width: 100%; background: #333; border: 1px solid #555; color: white; border-radius: 5px;">
-      <button onclick="saveNewAdmin()" style="width: 100%; padding: 10px; background: #8B0000; color: white; border: none; border-radius: 5px; cursor: pointer;">Kaydet</button>
-    </div>
-  </div>
-
-  <!-- Footer -->
-  <footer>
-    <p>&copy; 2025 GTA 5 Mods</p>
-  </footer>
-
-  <script>
-    // Admin giriş bilgileri
-    const correctUsername = "harvey";
-    const correctPassword = "48460";
-
-    // Firebase yapılandırması
-    const firebaseConfig = {
-      apiKey: "AIzaSyB3O_BAfG1f63H4OxSl6rHfYT8rbxj7nDQ",
-      authDomain: "thirtyonee-3fa9d.firebaseapp.com",
-      projectId: "otuzbir-3fa9d",
-      storageBucket: "thirtyonee-3fa9d.firebasestorage.app",
-      messagingSenderId: "54979484981",
-      appId: "1:54979484981:web:02339c1b4ac921bc5ec07c",
-      measurementId: "G-9Z3BXLNR4T"
-    };
-
-    let db;
-    let storage;
-
-    try {
-      // Firebase'i başlat
-      firebase.initializeApp(firebaseConfig);
-      db = firebase.firestore();
-      storage = firebase.storage();
-    } catch (error) {
-      console.error("Firebase başlatma hatası:", error);
-    }
-
-    // Admin giriş işlemi
-    function adminLogin() {
-      const username = document.getElementById('adminUsername').value;
-      const password = document.getElementById('adminPassword').value;
-      
-      // Harvey kontrolü
-      if (username === correctUsername && password === correctPassword) {
-        handleSuccessfulLogin(username);
-      } else {
-        // Diğer adminler için kontrol
-        const adminList = JSON.parse(localStorage.getItem('adminList')) || [];
-        const adminPasswords = JSON.parse(localStorage.getItem('adminPasswords')) || {};
-        
-        if (adminList.includes(username) && adminPasswords[username] === password) {
-          handleSuccessfulLogin(username);
-        } else {
-          alert('Kullanıcı adı veya şifre hatalı!');
-        }
-      }
-    }
-
-    // Admin listesini güncelle
-    function refreshAdminList() {
-      const adminListContent = document.getElementById('adminListContent');
-      const adminList = JSON.parse(localStorage.getItem('adminList')) || [];
-      const adminPasswords = JSON.parse(localStorage.getItem('adminPasswords')) || {};
-      
-      adminListContent.innerHTML = '';
-      
-      adminList.forEach(username => {
-        const adminDiv = document.createElement('div');
-        adminDiv.style.padding = '10px';
-        adminDiv.style.marginBottom = '10px';
-        adminDiv.style.background = 'rgba(0, 0, 0, 0.5)';
-        adminDiv.style.borderRadius = '5px';
-        adminDiv.style.border = '1px solid #00ff00';
-        
-        adminDiv.innerHTML = `
-          <strong style="color: #00ff00;">Kullanıcı Adı:</strong> ${username}<br>
-          <strong style="color: #00ff00;">Şifre:</strong> ${adminPasswords[username] || '1234'}<br>
-          <strong style="color: #00ff00;">Durum:</strong> ${username === correctUsername ? 'Ana Admin' : 'Alt Admin'}
-          ${username !== correctUsername ? `
-            <div style="margin-top: 10px;">
-              <button class="admin-button edit-button" onclick="editAdmin('${username}')">Düzenle</button>
-              <button class="admin-button delete-button" onclick="deleteAdmin('${username}')">Sil</button>
+        <div class="nav-container">
+            <div class="logo-container">
+                <img src="https://www.freepnglogos.com/uploads/gta-5-logo-png/grand-theft-auto-v-1.png" alt="GTA5 Logo" class="logo">
+                <span class="brand-name">GTA5</span>
             </div>
-          ` : ''}
-        `;
-        
-        adminListContent.appendChild(adminDiv);
-      });
-    }
-
-    // Admin düzenleme fonksiyonu
-    function editAdmin(username) {
-      const adminPasswords = JSON.parse(localStorage.getItem('adminPasswords')) || {};
-      const currentPassword = adminPasswords[username] || '';
-      
-      const newPassword = prompt('Yeni şifreyi girin:', currentPassword);
-      if (newPassword !== null && newPassword !== '') {
-        adminPasswords[username] = newPassword;
-        localStorage.setItem('adminPasswords', JSON.stringify(adminPasswords));
-        refreshAdminList();
-        alert('Admin şifresi güncellendi!');
-      }
-    }
-
-    // Admin silme fonksiyonu
-    function deleteAdmin(username) {
-      if (confirm(`${username} adminini silmek istediğinizden emin misiniz?`)) {
-        const adminList = JSON.parse(localStorage.getItem('adminList')) || [];
-        const adminPasswords = JSON.parse(localStorage.getItem('adminPasswords')) || {};
-        
-        // Admini listeden kaldır
-        const newAdminList = adminList.filter(admin => admin !== username);
-        localStorage.setItem('adminList', JSON.stringify(newAdminList));
-        
-        // Admin şifresini sil
-        delete adminPasswords[username];
-        localStorage.setItem('adminPasswords', JSON.stringify(adminPasswords));
-        
-        refreshAdminList();
-        alert('Admin başarıyla silindi!');
-      }
-    }
-
-    // Admin çıkış fonksiyonu
-    function adminLogout() {
-      localStorage.removeItem('isAdminLoggedIn');
-      localStorage.removeItem('adminUsername');
-      window.location.reload();
-    }
-
-    // Başarılı giriş işlemleri
-    function handleSuccessfulLogin(username) {
-      document.getElementById('adminLoginForm').style.display = 'none';
-      document.getElementById('adminBtn').style.display = 'none';
-      document.getElementById('logoutBtn').style.display = 'block';
-      
-      // Harvey için özel butonları göster
-      if (username === correctUsername) {
-        document.getElementById('modEkleBtn').style.display = 'block';
-        document.getElementById('adminEkleBtn').style.display = 'block';
-        document.getElementById('adminListCard').style.display = 'block';
-        refreshAdminList();
-      } else {
-        // Diğer adminler için sadece mod ekleme butonu
-        document.getElementById('modEkleBtn').style.display = 'block';
-      }
-      
-      // Admin ismini sağ üstte göster
-      const adminNameElement = document.getElementById('admin-name');
-      adminNameElement.textContent = 'Admin: ' + username;
-      adminNameElement.style.color = '#00ff00';
-      adminNameElement.style.textShadow = '0 0 5px rgba(0, 255, 0, 0.5)';
-      adminNameElement.style.fontSize = '18px';
-      adminNameElement.style.marginLeft = '10px';
-      
-      // Local storage'a kaydet
-      localStorage.setItem('isAdminLoggedIn', 'true');
-      localStorage.setItem('adminUsername', username);
-
-      alert('Giriş başarılı! Hoş geldiniz, ' + username + '.');
-    }
-
-    // Sayfa yüklendiğinde admin durumunu kontrol et
-    window.onload = function() {
-      const isAdminLoggedIn = localStorage.getItem('isAdminLoggedIn') === 'true';
-      const adminUsername = localStorage.getItem('adminUsername');
-
-      if (isAdminLoggedIn && adminUsername) {
-        document.getElementById('adminBtn').style.display = 'none';
-        document.getElementById('logoutBtn').style.display = 'block';
-        
-        // Harvey için özel butonları göster
-        if (adminUsername === correctUsername) {
-          document.getElementById('modEkleBtn').style.display = 'block';
-          document.getElementById('adminEkleBtn').style.display = 'block';
-          document.getElementById('adminListCard').style.display = 'block';
-          refreshAdminList();
-        } else {
-          // Diğer adminler için sadece mod ekleme butonu
-          document.getElementById('modEkleBtn').style.display = 'block';
-        }
-        
-        const adminNameElement = document.getElementById('admin-name');
-        adminNameElement.textContent = 'Admin: ' + adminUsername;
-        adminNameElement.style.color = '#00ff00';
-        adminNameElement.style.textShadow = '0 0 5px rgba(0, 255, 0, 0.5)';
-        adminNameElement.style.fontSize = '18px';
-        adminNameElement.style.marginLeft = '10px';
-      } else {
-        document.getElementById('adminBtn').style.display = 'block';
-        document.getElementById('logoutBtn').style.display = 'none';
-        document.getElementById('modEkleBtn').style.display = 'none';
-        document.getElementById('adminEkleBtn').style.display = 'none';
-        document.getElementById('adminListCard').style.display = 'none';
-        document.getElementById('admin-name').textContent = "";
-      }
-      
-      if (db) {
-        loadMods();
-      }
-    };
-
-    // Modları Firebase'den yükle
-    function loadMods() {
-      if (!db) {
-        console.error("Firebase bağlantısı yok!");
-        return;
-      }
-
-      // Animasyonlu kartları içeren div'i sakla
-      const animatedContent = document.querySelector('.animated-content');
-      
-      // Mod kartları için yeni bir div oluştur
-      const modsContainer = document.createElement('div');
-      modsContainer.className = 'mods-container';
-      modsContainer.style.display = 'flex';
-      modsContainer.style.flexWrap = 'wrap';
-      modsContainer.style.justifyContent = 'center';
-      modsContainer.style.gap = '20px';
-      modsContainer.style.padding = '20px';
-
-      // Content container'ı temizle
-      const contentContainer = document.getElementById('contentContainer');
-      contentContainer.innerHTML = '';
-
-      // Önce animasyonlu kartları geri ekle
-      contentContainer.appendChild(animatedContent);
-
-      // Mod kartlarını yükle
-      db.collection('mods').orderBy('uploadDate', 'desc').get().then((snapshot) => {
-        snapshot.forEach((doc) => {
-          const mod = doc.data();
-          const card = createModCard(mod);
-          modsContainer.appendChild(card);
-        });
-        // Mod kartlarını animasyonlu kartlardan sonra ekle
-        contentContainer.appendChild(modsContainer);
-      }).catch((error) => {
-        console.error("Modlar yüklenirken hata oluştu: ", error);
-      });
-    }
-
-    // Mod kartı oluştur
-    function createModCard(mod) {
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.style.width = '300px';
-      card.style.margin = '10px';
-      card.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
-      card.style.color = 'white';
-      
-      card.innerHTML = `
-        <img src="${mod.imageUrl}" class="card-img-top" alt="${mod.title}" style="height: 200px; object-fit: cover;">
-        <div class="card-body">
-          <h5 class="card-title">${mod.title}</h5>
-          <p class="card-text">${mod.description}</p>
-          <p class="card-text"><small>Yükleyen: ${mod.uploader}</small></p>
-          <a href="${mod.downloadUrl}" class="btn btn-success" target="_blank">İndir</a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="game-files.html">Standard Files</a>
+                <a href="redux.html">Redux</a>
+                <div class="dropdown">
+                    <a href="gunpack.html" class="nav-link">Gun-Pack</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="gunpack.html#revolver">Revolver</a></li>
+                        <li><a class="dropdown-item" href="gunpack.html#carbine">Carbine</a></li>
+                        <li><a class="dropdown-item" href="gunpack.html#shotguns">Shotguns</a></li>
+                        <li><a class="dropdown-item" href="gunpack.html#assault-rifles">Assault Rifles</a></li>
+                    </ul>
+                </div>
+                <a href="mods.html">Mods</a>
+                <a href="admin-log.html" class="admin-only">Admin Log</a>
+            </div>
+            <div class="search-admin-container">
+                <div class="search-container">
+                    <input type="text" placeholder="Dosya Ara...">
+                </div>
+                <a href="admin.html" class="admin-link">Admin Girişi</a>
+                <span id="adminName" class="admin-name"></span>
+            </div>
+            
         </div>
-      `;
-      
-      return card;
-    }
+    </nav>
 
-    // Admin giriş formunu göster
-    function showAdminLoginForm() {
-      document.getElementById('adminLoginForm').style.display = 'block';
-    }
+    <!-- Neon Line -->
+    <div class="neon-line"></div>
 
-    // Admin giriş formunu kapat
-    function closeAdminForm() {
-      document.getElementById('adminLoginForm').style.display = 'none';
-    }
+    <!-- Card Container -->
+    <div class="animated-content">
+        <div class="main-cards-container">
+            <div class="main-cards">
+                <div class="animated-card">
+                    <h3>standard-files</h3>
+                    <p>standard-files</p>
+                    <a href="game-files.html" class="go-button">GİT</a>
+                </div>
 
-    function toggleGunPack() {
-      const gunPackOptions = document.getElementById('gun-pack-options');
-      gunPackOptions.style.display = gunPackOptions.style.display === 'block' ? 'none' : 'block';
-    }
+                <div class="animated-card">
+                    <h3>Redux</h3>
+                    <p>Redux</p>
+                    <a href="redux.html" class="go-button">GİT</a>
+                </div>
 
-    // Admin listesini localStorage'dan al veya oluştur
-    let adminList = JSON.parse(localStorage.getItem('adminList')) || [];
-    if (!adminList.includes(correctUsername)) {
-      adminList.push(correctUsername);
-      localStorage.setItem('adminList', JSON.stringify(adminList));
-    }
-
-    // Yeni admin ekleme formunu göster
-    function showAddAdminForm() {
-      document.getElementById('addAdminForm').style.display = 'block';
-    }
-
-    // Yeni admin ekleme formunu kapat
-    function closeAddAdminForm() {
-      document.getElementById('addAdminForm').style.display = 'none';
-      document.getElementById('newAdminUsername').value = '';
-      document.getElementById('newAdminPassword').value = '';
-    }
-
-    // Yeni admin kaydet
-    function saveNewAdmin() {
-      const newUsername = document.getElementById('newAdminUsername').value;
-      const newPassword = document.getElementById('newAdminPassword').value;
-
-      if (!newUsername || !newPassword) {
-        alert('Lütfen tüm alanları doldurun!');
-        return;
-      }
-
-      // Admin listesini güncelle
-      const adminList = JSON.parse(localStorage.getItem('adminList')) || [];
-      if (!adminList.includes(newUsername)) {
-        adminList.push(newUsername);
-        localStorage.setItem('adminList', JSON.stringify(adminList));
+                <div class="animated-card">
+                    <h3>Gun-Pack</h3>
+                    <p>Gun-Pack</p>
+                    <a href="weapons.html" class="go-button">GİT</a>
+                </div>
+            </div>
+        </div>
         
-        // Admin şifrelerini sakla
-        const adminPasswords = JSON.parse(localStorage.getItem('adminPasswords')) || {};
-        adminPasswords[newUsername] = newPassword;
-        localStorage.setItem('adminPasswords', JSON.stringify(adminPasswords));
+        <div class="admin-section admin-only">
+            <div class="admin-list-card">
+                <h3>Admin Listesi</h3>
+                <ul class="admin-list" id="adminList"></ul>
+            </div>
+        </div>
+    </div>
 
-        alert('Yeni admin başarıyla eklendi!');
-        refreshAdminList(); // Admin listesini güncelle
-        closeAddAdminForm();
-      } else {
-        alert('Bu kullanıcı adı zaten kullanılıyor!');
-      }
-    }
-  </script>
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <p>This website is designed for the GTA5 modding community. All rights reserved.</p>
+            <p>Contact us: contact@gta5mods.com</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
+    <script>
+        // Add neon lights
+        function createNeonLights() {
+            const container = document.getElementById('neonLights');
+            const numberOfLights = 5;
+            
+            for (let i = 0; i < numberOfLights; i++) {
+                const light = document.createElement('div');
+                light.className = 'neon-light';
+                light.style.left = `${Math.random() * 100}%`;
+                light.style.animationDelay = `${Math.random() * 5}s`;
+                container.appendChild(light);
+            }
+        }
+
+        // Initialize animations
+        window.addEventListener('DOMContentLoaded', (event) => {
+            createNeonLights();
+            
+            // Add animation classes to content cards
+            const cards = document.querySelectorAll('.content-card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.2}s`;
+            });
+        });
+
+        // Admin durumu kontrolü
+        function checkAdminStatus() {
+            const adminName = localStorage.getItem('adminName');
+            const isAdmin = localStorage.getItem('isAdmin');
+            
+            if (adminName && isAdmin === 'true') {
+                document.body.classList.add('is-admin');
+                const adminNameSpan = document.getElementById('adminName');
+                if (adminNameSpan) {
+                    adminNameSpan.textContent = `Admin: ${adminName}`;
+                }
+                
+                const adminLink = document.querySelector('.admin-link');
+                if (adminLink) {
+                    adminLink.textContent = 'Çıkış Yap';
+                    adminLink.classList.add('admin-logout');
+                    adminLink.href = '#';
+                    adminLink.onclick = function(e) {
+                        e.preventDefault();
+                        // Admin çıkışı yap
+                        localStorage.removeItem('adminName');
+                        localStorage.removeItem('isAdmin');
+                        
+                        // Log kaydı oluştur
+                        const logs = JSON.parse(localStorage.getItem('adminLogs') || '[]');
+                        logs.unshift({
+                            timestamp: new Date().toISOString(),
+                            action: `Admin çıkış yaptı: ${adminName}`
+                        });
+                        localStorage.setItem('adminLogs', JSON.stringify(logs));
+                        
+                        // Sayfayı yenile
+                        window.location.reload();
+                    };
+                }
+
+                // Log kaydı
+                const logs = JSON.parse(localStorage.getItem('adminLogs') || '[]');
+                logs.unshift({
+                    timestamp: new Date().toISOString(),
+                    action: 'Ana sayfaya erişim sağlandı'
+                });
+                localStorage.setItem('adminLogs', JSON.stringify(logs));
+            }
+        }
+
+        // Sayfa yüklendiğinde admin durumunu kontrol et
+        window.onload = function() {
+            checkAdminStatus();
+            createNeonLights();
+            loadAdminList();
+        }
+
+        // Admin listesi işlemleri
+        function loadAdminList() {
+            const adminList = document.getElementById('adminList');
+            const admins = JSON.parse(localStorage.getItem('admins') || '[]');
+            
+            if (admins.length === 0) {
+                // Varsayılan admin
+                admins.push({ 
+                    username: 'harvey', 
+                    password: '1234',
+                    role: 'Ana admin',
+                    status: 'active'
+                });
+                localStorage.setItem('admins', JSON.stringify(admins));
+            }
+
+            adminList.innerHTML = '';
+            admins.forEach(admin => {
+                const li = document.createElement('li');
+                const isHarvey = admin.username === 'harvey';
+                li.innerHTML = `
+                    <div class="admin-name-container">
+                        <span>${admin.username}</span>
+                        <span class="admin-status ${isHarvey || admin.status === 'active' ? 'status-active' : 'status-inactive'}">
+                            ${isHarvey || admin.status === 'active' ? 'Aktif' : 'Aktif Değil'}
+                        </span>
+                    </div>
+                `;
+                adminList.appendChild(li);
+            });
+        }
+
+        // Admin ekleme işlemi güncelleme
+        const addAdminBtn = document.getElementById('addAdminBtn');
+        const adminForm = document.getElementById('adminForm');
+        const saveAdminBtn = document.getElementById('saveAdminBtn');
+
+        addAdminBtn.addEventListener('click', () => {
+            adminForm.classList.toggle('active');
+        });
+
+        saveAdminBtn.addEventListener('click', () => {
+            const username = document.getElementById('newAdminUsername').value;
+            const password = document.getElementById('newAdminPassword').value;
+            const role = document.getElementById('newAdminRole').value;
+
+            if (username && password) {
+                const admins = JSON.parse(localStorage.getItem('admins') || '[]');
+                if (!admins.some(admin => admin.username === username)) {
+                    admins.push({ 
+                        username, 
+                        password, 
+                        role,
+                        status: 'active'  // Yeni eklenen admin varsayılan olarak aktif
+                    });
+                    localStorage.setItem('admins', JSON.stringify(admins));
+
+                    // Log kaydı
+                    const logs = JSON.parse(localStorage.getItem('adminLogs') || '[]');
+                    logs.unshift({
+                        timestamp: new Date().toISOString(),
+                        action: `Yeni admin eklendi: ${username} (${role})`
+                    });
+                    localStorage.setItem('adminLogs', JSON.stringify(logs));
+
+                    loadAdminList();
+                    adminForm.classList.remove('active');
+                    document.getElementById('newAdminUsername').value = '';
+                    document.getElementById('newAdminPassword').value = '';
+                    document.getElementById('newAdminRole').value = '';
+                }
+            }
+        });
+    </script>
 </body>
-</html>
+</html> 
