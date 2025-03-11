@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Log - GTA5 Mods</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+    <link href="standard-files.css" rel="stylesheet">
+    <style>
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            white-space: nowrap;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-size: 15px;
+            padding: 5px 10px;
+        }
+
+        .search-admin-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .search-container input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 107, 0, 0.5);
+            color: #fff;
+            padding: 8px 15px;
+            width: 200px;
+            max-width: 100%;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-toggle::after {
+            display: none;
+        }
+
+        .dropdown-menu {
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid var(--neon-orange);
+            margin-top: 0;
+        }
+
+        .admin-panel-container {
+            display: flex;
+            gap: 30px;
+            padding: 100px 30px 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+            min-height: calc(100vh - 200px);
+        }
+
+        .admin-sidebar {
+            width: 350px;
+            background: var(--card-bg);
+            border: 2px solid var(--neon-orange);
+            border-radius: 15px;
+            padding: 20px;
+            height: fit-content;
+        }
+
+        .admin-log-content {
+            flex: 1;
+            background: var(--card-bg);
+            border: 2px solid var(--neon-orange);
+            border-radius: 15px;
+            padding: 20px;
+            max-height: calc(100vh - 160px);
+            overflow-y: auto;
+        }
+
+        .admin-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--neon-orange);
+        }
+
+        .admin-list-header h3 {
+            color: var(--neon-orange);
+            font-size: 1.2em;
+            margin: 0;
+        }
+
+        .add-admin-btn {
+            padding: 8px 15px;
+            font-size: 0.9em;
+            border-radius: 6px;
+            background: var(--neon-orange);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-admin-btn:hover {
+            box-shadow: 0 0 15px var(--neon-orange);
+            transform: translateY(-2px);
+        }
+
+        .admin-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        .admin-logs {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        @media (max-width: 1024px) {
+            .admin-panel-container {
+                flex-direction: column;
+            }
+
+            .admin-sidebar {
+                width: 100%;
+            }
+
+            .admin-log-content {
+                max-height: 500px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                padding: 10px;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                text-align: center;
+                gap: 10px;
+            }
+
+            .search-admin-container {
+                flex-direction: column;
+                gap: 10px;
+                align-items: center;
+            }
+        }
+
+        .admin-form {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.95);
+            border: 2px solid var(--neon-orange);
+            border-radius: 15px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            z-index: 1000;
+        }
+
+        .admin-form h3 {
+            color: var(--neon-orange);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            color: white;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--neon-orange);
+            border-radius: 4px;
+            color: white;
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .form-buttons button {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        #saveAdminBtn {
+            background: var(--neon-orange);
+            color: black;
+        }
+
+        #saveAdminBtn:hover {
+            background: black;
+            color: var(--neon-orange);
+            box-shadow: 0 0 15px var(--neon-orange);
+        }
+
+        .cancel-btn {
+            background: #666;
+            color: white;
+        }
+
+        .cancel-btn:hover {
+            background: #444;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        }
+
+        .success-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 255, 0, 0.2);
+            border: 2px solid #00ff00;
+            border-radius: 8px;
+            padding: 15px;
+            color: white;
+            z-index: 1000;
+        }
+
+        .success-message h4 {
+            color: #00ff00;
+            margin: 0 0 5px 0;
+        }
+
+        .success-message p {
+            margin: 0;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-right: auto;
+        }
+
+        .logo {
+            height: 50px;
+            width: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-animation"></div>
+    <div id="neon-circles"></div>
+
+    <nav>
+        <div class="nav-container">
+            <div class="logo-container">
+                <img src="Thirtyone.png" alt="Thirtyone Logo" class="logo">
+                <span class="brand-name">GTA5</span>
+            </div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="game-files.html">Standard Files</a>
+                <a href="redux.html">Redux</a>
+                <div class="dropdown">
+                    <a href="gunpack.html" class="nav-link">Gun-Pack</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="revo.html">Revolver</a></li>
+                        <li><a class="dropdown-item" href="carbine.html">Carbine</a></li>
+                        <li><a class="dropdown-item" href="shotguns.html">Shotguns</a></li>
+                        <li><a class="dropdown-item" href="assault.html">Assault Rifles</a></li>
+                    </ul>
+                </div>
+                <a href="mods.html">Mods</a>
+                <a href="admin-log.html" class="admin-only">Admin Log</a>
+            </div>
+            <div class="search-admin-container">
+                <div class="search-container">
+                    <input type="text" placeholder="Search files...">
+                </div>
+                <a href="admin.html" class="admin-link">Admin Login</a>
+                <span id="adminName" class="admin-name"></span>
+                <a href="#" id="logoutBtn" class="admin-link admin-logout" style="display: none;">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="admin-panel-container">
+        <div class="admin-sidebar">
+            <div class="admin-list-header">
+                <h3>Admin Listesi</h3>
+                <button id="addAdminBtn" class="add-admin-btn">
+                    <i class="fas fa-plus"></i> Admin Ekle
+                </button>
+            </div>
+            <ul class="admin-list" id="adminList"></ul>
+        </div>
+        
+        <div class="admin-log-content">
+            <div class="admin-list-header">
+                <h3>Admin Logları</h3>
+            </div>
+            <div id="adminLogs" class="admin-logs"></div>
+        </div>
+    </div>
+
+    <div id="addAdminForm" class="admin-form">
+        <h3>Yeni Admin Ekle</h3>
+        <div class="form-group">
+            <label>Kullanıcı Adı:</label>
+            <input type="text" id="newAdminUsername" placeholder="Kullanıcı adı girin">
+        </div>
+        <div class="form-group">
+            <label>Şifre:</label>
+            <input type="password" id="newAdminPassword" placeholder="Şifre girin">
+        </div>
+        <div class="form-group">
+            <label>Bilgi:</label>
+            <input type="text" id="newAdminRole" placeholder="Admin bilgisi girin">
+        </div>
+        <div class="form-buttons">
+            <button id="saveAdminBtn">Kaydet</button>
+            <button id="cancelAdminBtn" class="cancel-btn">İptal</button>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p>This website is designed for the GTA5 mod community. All rights reserved.</p>
+            <p>Contact: contact@gta5mods.com</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
+    <script>
+        function initializeAdmin() {
+            const admins = JSON.parse(localStorage.getItem('admins') || '[]');
+            const adminName = localStorage.getItem('adminName');
+            const isAdmin = localStorage.getItem('isAdmin');
+
+            // Giriş yapmamış kullanıcıyı admin.html'e yönlendir
+            if (!adminName || !isAdmin) {
+                window.location.href = 'admin.html';
+                return;
+            }
+
+            // Harvey yoksa ekle
+            const harvey = admins.find(a => a.username === 'harvey');
+            if (!harvey) {
+                admins.push({ 
+                    username: 'harvey', 
+                    password: '1234', 
+                    role: 'Ana admin',
+                    status: 'active'
+                });
+                localStorage.setItem('admins', JSON.stringify(admins));
+            }
+            
+            let logs = JSON.parse(localStorage.getItem('adminLogs') || '[]');
+            if (logs.length === 0) {
+                logs.push({
+                    timestamp: new Date().toISOString(),
+                    action: 'System initialized by harvey'
+                });
+                localStorage.setItem('adminLogs', JSON.stringify(logs));
+            }
+        }
+
+        function updateAdminList() {
+            const adminList = document.getElementById('adminList');
+            const admins = JSON.parse(localStorage.getItem('admins') || '[]');
+            const currentAdmin = localStorage.getItem('adminName');
+            
+            adminList.innerHTML = '';
+            admins.forEach(admin => {
+                const li = document.createElement('li');
+                const isHarvey = admin.username === 'harvey';
+                li.innerHTML = `
+                    <div class="admin-info" style="padding: 15px; border-radius: 8px; background: rgba(0, 0, 0, 0.3);">
+                        <div class="admin-name-container" style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                            <span class="admin-name" style="font-size: 1.1em; font-weight: bold;">${admin.username}</span>
+                            <span class="admin-status ${isHarvey || admin.status === 'active' ? 'status-active' : 'status-inactive'}" 
+                                  style="padding: 4px 12px; border-radius: 12px; font-size: 0.8em;">
+                                ${isHarvey || admin.status === 'active' ? 'Aktif' : 'Aktif Değil'}
+                            </span>
+                        </div>
+                        <div class="admin-details" style="margin-bottom: 10px;">
+                            <span style="font-size: 0.9em;"><strong>Admin İsmi:</strong> ${admin.username}</span>
+                            <span style="font-size: 0.9em;"><strong>Şifre:</strong> ${admin.password}</span>
+                            <span style="font-size: 0.9em;"><strong>Bilgi:</strong> ${admin.role || 'Belirtilmemiş'}</span>
+                        </div>
+                        ${currentAdmin === 'harvey' && !isHarvey ? `
+                            <div class="admin-actions" style="display: flex; gap: 8px;">
+                                <button class="admin-btn edit-btn" onclick="editAdmin('${admin.username}')" 
+                                        style="padding: 4px 8px; font-size: 0.75em; border-radius: 4px;">
+                                    Düzenle
+                                </button>
+                                <button class="admin-btn delete-btn" onclick="deleteAdmin('${admin.username}')" 
+                                        style="padding: 4px 8px; font-size: 0.75em; border-radius: 4px;">
+                                    Sil
+                                </button>
+                                <button class="admin-btn ${admin.status === 'active' ? 'delete-btn' : 'edit-btn'}" 
+                                        onclick="toggleAdminStatus('${admin.username}')"
+                                        style="padding: 4px 8px; font-size: 0.75em; border-radius: 4px;">
+                                    ${admin.status === 'active' ? 'Deaktif Et' : 'Aktif Et'}
+                                </button>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+                adminList.appendChild(li);
+            });
+
+            // Update admin logs
+            const logsContainer = document.getElementById('adminLogs');
+            const logs = JSON.parse(localStorage.getItem('adminLogs') || '[]');
+            logsContainer.innerHTML = logs.map((log, index) => `
+                <div class="log-entry" style="padding: 12px; margin-bottom: 10px; border-radius: 8px; background: rgba(0, 0, 0, 0.3); position: relative; padding-right: 35px;">
+                    <div style="flex: 1;">
+                        <div class="timestamp" style="color: var(--neon-orange); font-size: 0.85em; margin-bottom: 5px;">
+                            ${new Date(log.timestamp).toLocaleString()}
+                        </div>
+                        <div class="action" style="font-size: 0.9em; line-height: 1.4;">
+                            ${log.action}
+                        </div>
+                    </div>
+                    ${currentAdmin === 'harvey' ? `
+                        <button class="admin-btn delete-btn" onclick="deleteLog(${index})" 
+                                style="position: absolute; right: 0; top: 0; bottom: 0; width: 20px; padding: 0; 
+                                       margin: 0; border: none; border-radius: 0 8px 8px 0; 
+                                       background: #ff3333; cursor: pointer; transition: all 0.3s ease;">
+                            <span style="display: none;">Sil</span>
+                        </button>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        function toggleAdminStatus(username) {
+            const admins = JSON.parse(localStorage.getItem('admins') || '[]');
+            const admin = admins.find(a => a.username === username);
+            if (admin && username !== 'harvey') {
+                admin.status = admin.status === 'active' ? 'inactive' : 'active';
+                localStorage.setItem('admins', JSON.stringify(admins));
+                
+                const logs = JSON.parse(localStorage.getItem('adminLogs') || '[]');
+                logs.unshift({
+                    timestamp: new Date().toISOString(),
+                    action: `Admin durumu değiştirildi: ${username} - ${admin.status === 'active' ? 'Aktif' : 'Aktif Değil'} - Değiştiren: harvey`
+                });
+                localStorage.setItem('adminLogs', JSON.stringify(logs));
+                
+                updateAdminList();
+            }
+        }
+
+        function editAdmin(username) {
+            const admins = JSON.parse(localStorage.getItem('admins') || '[]');
+            const admin = admins.find(a => a.username === username);
+            if (admin && username !== 'harvey') {
+                document.getElementById('newAdminUsername').value = admin.username;
+                document.getElementById('newAdminRole').value = admin.role || '';
+                document.getElementById('addAdminForm').style.display = 'block';
+                
+                // Save butonuna tıklandığında güncelleme yapılacak
+                const saveBtn = document.getElementById('saveAdminBtn');
+                saveBtn.onclick = function() {
+                    const newUsername = document.getElementById('newAdminUsername').value;
+                    const newPassword = document.getElementById('newAdminPassword').value;
+                    const newRole = document.getElementById('newAdminRole').value;
+                    
+                    if (newUsername) {
+                        admin.username = newUsername;
+                        if (newPassword) admin.password = newPassword;
+                        admin.role = newRole;
+                        
+                        localStorage.setItem('admins', JSON.stringify(admins));
+                        
+                        const logs = JSON.parse(localStorage.getItem('adminLogs') || '[]');
+                        logs.unshift({
+                            timestamp: new Date().toISOString(),
+                            action: `Admin düzenlendi: ${username} -> ${newUsername} - Düzenleyen: harvey`
+                        });
+                        localStorage.setItem('adminLogs', JSON.stringify(logs));
+                        
+                        document.getElementById('addAdminForm').style.display = 'none';
+                        updateAdminList();
+                    }
+                };
+            }
+        }
+
+        function deleteAdmin(username) {
+            if (username !== 'harvey' && confirm(`${username} adlı admini silmek istediğinize emin misiniz?`)) {
+                const admins = JSON.parse(localStorage.getItem('admins') || '[]');
+                const filteredAdmins = admins.filter(a => a.username !== username);
+                localStorage.setItem('admins', JSON.stringify(filteredAdmins));
+                
+                const logs = JSON.parse(localStorage.getItem('adminLogs') || '[]');
+                logs.unshift({
+                    timestamp: new Date().toISOString(),
+                    action: `Admin silindi: ${username} - Silen: harvey`
+                });
+                localStorage.setItem('adminLogs', JSON.stringify(logs));
+                
+                updateAdminList();
+            }
+        }
+
+        function deleteLog(index) {
+            if (confirm('Bu log kaydını silmek istediğinize emin misiniz?')) {
+                const logs = JSON.parse(localStorage.getItem('adminLogs') || '[]');
+                logs.splice(index, 1);
+                localStorage.setItem('adminLogs', JSON.stringify(logs));
+                updateAdminList();
+            }
+        }
+
+        window.onload = function() {
+            initializeAdmin();
+            const adminName = localStorage.getItem('adminName');
+            if (adminName) {
+                document.getElementById('logoutBtn').style.display = 'inline-block';
+                document.getElementById('adminName').textContent = adminName;
+                updateAdminList();
+            }
+        }
+
+        document.getElementById('logoutBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            const adminName = localStorage.getItem('adminName');
+            const logs = JSON.parse(localStorage.getItem('adminLogs') || '[]');
+            logs.unshift({
+                timestamp: new Date().toISOString(),
+                action: `Admin logout: ${adminName}`
+            });
+            localStorage.setItem('adminLogs', JSON.stringify(logs));
+            
+            localStorage.removeItem('adminName');
+            localStorage.removeItem('isAdmin');
+            window.location.href = 'admin.html';
+        });
+
+        document.getElementById('addAdminBtn').addEventListener('click', function() {
+            document.getElementById('addAdminForm').style.display = 'block';
+        });
+
+        document.getElementById('cancelAdminBtn').addEventListener('click', function() {
+            document.getElementById('addAdminForm').style.display = 'none';
+            document.getElementById('newAdminUsername').value = '';
+            document.getElementById('newAdminPassword').value = '';
+            document.getElementById('newAdminRole').value = '';
+        });
+
+        document.getElementById('saveAdminBtn').addEventListener('click', function() {
+            const username = document.getElementById('newAdminUsername').value;
+            const password = document.getElementById('newAdminPassword').value;
+            const role = document.getElementById('newAdminRole').value || 'Admin';
+            
+            if (username && password) {
+                const admins = JSON.parse(localStorage.getItem('admins') || '[]');
+                if (!admins.some(admin => admin.username === username)) {
+                    // Yeni admin objesi
+                    const newAdmin = {
+                        username: username,
+                        password: password,
+                        role: role,
+                        status: 'active'  // Varsayılan olarak aktif
+                    };
+                    
+                    // Adminler listesine ekle
+                    admins.push(newAdmin);
+                    localStorage.setItem('admins', JSON.stringify(admins));
+                    
+                    // Log kaydı oluştur
+                    const logs = JSON.parse(localStorage.getItem('adminLogs') || '[]');
+                    logs.unshift({
+                        timestamp: new Date().toISOString(),
+                        action: `Yeni admin eklendi: ${username} (${role}) - Ekleyen: harvey`
+                    });
+                    localStorage.setItem('adminLogs', JSON.stringify(logs));
+                    
+                    // Başarılı mesajı göster
+                    const successMsg = document.createElement('div');
+                    successMsg.className = 'success-message';
+                    successMsg.innerHTML = `
+                        <h4>Admin Eklendi!</h4>
+                        <p>${username} başarıyla eklendi.</p>
+                    `;
+                    document.body.appendChild(successMsg);
+                    
+                    setTimeout(() => {
+                        successMsg.remove();
+                    }, 2000);
+                    
+                    // Formu temizle ve kapat
+                    document.getElementById('newAdminUsername').value = '';
+                    document.getElementById('newAdminPassword').value = '';
+                    document.getElementById('newAdminRole').value = '';
+                    document.getElementById('addAdminForm').style.display = 'none';
+                    
+                    // Admin listesini güncelle
+                    updateAdminList();
+                } else {
+                    alert('Bu kullanıcı adı zaten kullanılıyor!');
+                }
+            } else {
+                alert('Lütfen kullanıcı adı ve şifre alanlarını doldurun!');
+            }
+        });
+
+        function createNeonCircles() {
+            const container = document.getElementById('neon-circles');
+            const numCircles = 5;
+            for (let i = 0; i < numCircles; i++) {
+                const circle = document.createElement('div');
+                circle.className = 'neon-circle';
+                circle.style.width = Math.random() * 100 + 50 + 'px';
+                circle.style.height = circle.style.width;
+                circle.style.left = Math.random() * 100 + 'vw';
+                circle.style.top = Math.random() * 100 + 'vh';
+                circle.style.animationDelay = Math.random() * 5 + 's';
+                container.appendChild(circle);
+            }
+        }
+        createNeonCircles();
+    </script>
+</body>
+</html> 

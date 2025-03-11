@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gun-Pack - GTA5 Mods</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+    <link href="standard-files.css" rel="stylesheet">
+    <style>
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            white-space: nowrap;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-size: 15px;
+            padding: 5px 10px;
+        }
+
+        .search-admin-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .search-container input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 107, 0, 0.5);
+            color: #fff;
+            padding: 8px 15px;
+            width: 200px;
+            max-width: 100%;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-toggle::after {
+            display: none;
+        }
+
+        .dropdown-menu {
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid var(--neon-orange);
+            margin-top: 0;
+        }
+
+        .animated-content {
+            flex: 1;
+            padding: 120px 20px 50px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 120px);
+        }
+
+        .main-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            width: 100%;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .animated-card {
+            width: 100%;
+            min-width: unset;
+            max-width: unset;
+            height: 400px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid var(--neon-orange);
+            border-radius: 15px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.8s ease-out forwards;
+            opacity: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .animated-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 0 30px rgba(255, 107, 26, 0.3);
+        }
+
+        .animated-card:nth-child(1) { animation-delay: 0.2s; }
+        .animated-card:nth-child(2) { animation-delay: 0.4s; }
+        .animated-card:nth-child(3) { animation-delay: 0.6s; }
+        .animated-card:nth-child(4) { animation-delay: 0.8s; }
+
+        .animated-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                rgba(255, 107, 26, 0.1),
+                transparent
+            );
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+            pointer-events: none;
+        }
+
+        .animated-card h3 {
+            color: var(--neon-orange);
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(255, 107, 26, 0.5);
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .animated-card p {
+            color: white;
+            font-size: 1.1em;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .go-button {
+            background: var(--neon-orange);
+            color: black;
+            text-decoration: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            text-align: center;
+            border: 2px solid var(--neon-orange);
+            margin-top: auto;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .go-button:hover {
+            background: transparent;
+            color: var(--neon-orange);
+            box-shadow: 0 0 20px rgba(255, 107, 26, 0.4);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes shine {
+            0% { transform: rotate(45deg) translate(-100%, -100%); }
+            100% { transform: rotate(45deg) translate(100%, 100%); }
+        }
+
+        @media (max-width: 1400px) {
+            .main-cards {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 20px;
+            }
+            .animated-card {
+                height: 380px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .main-cards {
+                grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+                gap: 15px;
+            }
+            .animated-card {
+                height: 350px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                padding: 10px;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                text-align: center;
+                gap: 10px;
+            }
+
+            .search-admin-container {
+                flex-direction: column;
+                gap: 10px;
+                align-items: center;
+            }
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-right: auto;
+        }
+
+        .logo {
+            height: 50px;
+            width: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-animation"></div>
+    <div id="neon-circles"></div>
+
+    <nav>
+        <div class="nav-container">
+            <div class="logo-container">
+                <img src="Thirtyone.png" alt="Thirtyone Logo" class="logo">
+                <span class="brand-name">GTA5</span>
+            </div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="game-files.html">Standard Files</a>
+                <a href="redux.html">Redux</a>
+                <div class="dropdown">
+                    <a href="gunpack.html" class="nav-link">Gun-Pack</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="revo.html">Revolver</a></li>
+                        <li><a class="dropdown-item" href="carbine.html">Carbine</a></li>
+                        <li><a class="dropdown-item" href="shotguns.html">Shotguns</a></li>
+                        <li><a class="dropdown-item" href="assault.html">Assault Rifles</a></li>
+                    </ul>
+                </div>
+                <a href="mods.html">Mods</a>
+                <a href="admin-log.html" class="admin-only">Admin Log</a>
+            </div>
+            <div class="search-admin-container">
+                <div class="search-container">
+                    <input type="text" placeholder="Search files...">
+                </div>
+                <a href="admin.html" class="admin-link">Admin Login</a>
+                <span id="adminName" class="admin-name"></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="neon-line"></div>
+
+    <div class="animated-content">
+        <div class="main-cards">
+            <div class="animated-card" id="revolver">
+                <h3>Revolver</h3>
+                <p>GTA5'in en iyi revolver silahları. Klasik ve güçlü revolverlar ile oyununuzu zenginleştirin.</p>
+                <a href="revo.html" class="go-button">GO</a>
+            </div>
+            <div class="animated-card" id="carbine">
+                <h3>Carbine</h3>
+                <p>En iyi carbine tüfekleri. Hafif ve etkili carbine'lar ile oyun deneyiminizi artırın.</p>
+                <a href="carbine.html" class="go-button">GO</a>
+            </div>
+            <div class="animated-card" id="shotguns">
+                <h3>Shotguns</h3>
+                <p>Güçlü ve etkileyici shotgun'lar. Yakın mesafe çatışmalar için en iyi seçim.</p>
+                <a href="shotguns.html" class="go-button">GO</a>
+            </div>
+            <div class="animated-card" id="assault-rifles">
+                <h3>Assault Rifles</h3>
+                <p>Modern ve güçlü assault rifle'lar. Her türlü çatışma için ideal silahlar.</p>
+                <a href="assault.html" class="go-button">GO</a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p>This website is designed for the GTA5 mod community. All rights reserved.</p>
+            <p>Contact: contact@gta5mods.com</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
+    <script>
+        // Admin kontrolü
+        window.onload = function() {
+            const adminName = localStorage.getItem('adminName');
+            if (adminName) {
+                document.body.classList.add('is-admin');
+                document.getElementById('adminName').textContent = `Admin: ${adminName}`;
+                const adminLink = document.querySelector('.admin-link');
+                adminLink.textContent = 'Çıkış Yap';
+                adminLink.classList.add('admin-logout');
+                adminLink.href = '#';
+                adminLink.onclick = function(e) {
+                    e.preventDefault();
+                    localStorage.removeItem('adminName');
+                    window.location.reload();
+                };
+            }
+        }
+
+        // Neon daire efektleri
+        function createNeonCircles() {
+            const container = document.getElementById('neon-circles');
+            const numCircles = 5;
+            
+            for (let i = 0; i < numCircles; i++) {
+                const circle = document.createElement('div');
+                circle.className = 'neon-circle';
+                circle.style.width = Math.random() * 100 + 50 + 'px';
+                circle.style.height = circle.style.width;
+                circle.style.left = Math.random() * 100 + 'vw';
+                circle.style.top = Math.random() * 100 + 'vh';
+                circle.style.animationDelay = Math.random() * 5 + 's';
+                container.appendChild(circle);
+            }
+        }
+        createNeonCircles();
+    </script>
+</body>
+</html>

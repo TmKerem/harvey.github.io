@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - GTA5 Mods</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="background-animation"></div>
+    <div id="neon-circles"></div>
+
+    <nav>
+        <div class="nav-container">
+            <div class="logo-container">
+                <img src="Thirtyone.png" alt="Thirtyone Logo" class="logo">
+                <span class="brand-name">GTA5</span>
+            </div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="game-files.html">Standard Files</a>
+                <a href="redux.html">Redux</a>
+                <div class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">Weapons Pack</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="weapons.html">GTA 5 Weapons</a></li>
+                        <li><a class="dropdown-item" href="weapons.html#pistol">Pistol</a></li>
+                        <li><a class="dropdown-item" href="weapons.html#rifle">Rifle</a></li>
+                        <li><a class="dropdown-item" href="weapons.html#sniper">Sniper</a></li>
+                        <li><a class="dropdown-item" href="weapons.html#shotgun">Shotgun</a></li>
+                    </ul>
+                </div>
+                <a href="admin-log.html" class="admin-only">Admin Log</a>
+            </div>
+            <div class="search-admin-container">
+                <div class="search-container">
+                    <input type="text" placeholder="Search files...">
+                </div>
+                <span id="adminName" class="admin-name"></span>
+                <button id="addAdminBtn" class="add-admin-btn admin-only" style="display: none;">+</button>
+                <a href="#" id="logoutBtn" class="admin-link admin-logout" style="display: none;">Çıkış Yap </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="admin-login">
+        <h2>Admin Login</h2>
+        <form id="adminForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required>
+            </div>
+            <button type="submit" class="admin-btn">Login</button>
+        </form>
+    </div>
+
+    <div class="admin-list-overlay" id="adminListOverlay">
+        <div class="admin-list-container">
+            <button class="close-btn" onclick="closeAdminList()">&times;</button>
+            <div class="admin-list-header">
+                <h3>Admin Listesi</h3>
+                <button id="addAdminBtn" class="add-admin-btn">
+                    <i class="fas fa-plus"></i> Admin Ekle
+                </button>
+            </div>
+            <ul class="admin-list" id="adminList"></ul>
+        </div>
+    </div>
+
+    <div id="editAdminForm" class="admin-form">
+        <h3>Edit Admin</h3>
+        <input type="text" id="editUsername" placeholder="Username" readonly>
+        <input type="password" id="editPassword" placeholder="New Password">
+        <input type="text" id="editRole" placeholder="Role">
+        <button id="saveEditBtn">Save Changes</button>
+    </div>
+
+    <div id="addAdminForm" class="admin-form">
+        <h3>Add New Admin</h3>
+        <input type="text" id="newAdminUsername" placeholder="Username">
+        <input type="password" id="newAdminPassword" placeholder="Password">
+        <input type="text" id="newAdminRole" placeholder="Role" value="Admin" readonly>
+        <button id="saveAdminBtn">Add Admin</button>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p>This website is designed for the GTA5 mod community. All rights reserved.</p>
+            <p>Contact: contact@gta5mods.com</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
+    <script>
+        function initializeAdmin() {
+            const admins = JSON.parse(localStorage.getItem('admins') || '[]');
+            const harvey = admins.find(a => a.username === 'harvey');
+            
+            if (!harvey) {
+                admins.push({ 
+                    username: 'harvey', 
+                    password: '48460', 
+                    role: 'Super Admin',
+                    status: 'active'
+                });
+                localStorage.setItem('admins', JSON.stringify(admins));
+            }
+            
+            let logs = JSON.parse(localStorage.getItem('adminLogs') || '[]');
+            if (logs.length === 0) {
+                logs.push({
+                    timestamp: new Date().toISOString(),
+                    action: 'System initialized by harvey'
+                });
+                localStorage.setItem('adminLogs', JSON.stringify(logs));
+            }
+        }
+
+        function updateAdminList() {
+            const adminList = document.getElementById('adminList');
+            const admins = JSON.parse(localStorage.getItem('admins') || '[]');
+            const currentAdmin = localStorage.getItem('adminName');
+            
+            adminList.innerHTML = '';
+            admins.forEach(admin => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <div class="admin-info">
+                        <div class="admin-name">${admin.username}</div>
+                        <div class="admin-details">
+                            <span>Admin İsmi: ${admin.username}</span>
+                            <span>Şifresi: ${admin.password}</span>
+                            <span>Bilgi: ${admin.role}</span>
+                        </div>
+                    </div>
+                    ${currentAdmin === 'harvey' && admin.username !== 'harvey' ? `
+                        <div class="admin-actions">
+                            <button class="admin-btn edit-btn" onclick="showEditForm('${admin.username}')">Düzenle</button>
+                            <button class="admin-btn delete-btn" onclick="deleteAdmin('${admin.username}')">Sil</button>
+                        </div>
+                    ` : ''}
+                `;
+                adminList.appendChild(li);
+            });
+
+            // Update admin logs
+            const logsContainer = document.getElementById('adminLogs');
+            const logs = JSON.parse(localStorage.getItem('adminLogs') || '[]');
+            logsContainer.innerHTML = logs.map(log => `
+                <div class="log-entry">
+                    <div class="timestamp">${new Date(log.timestamp).toLocaleString()}</div>
+                    <div class="action">${log.action}</div>
+                </div>
+            `).join('');
+        }
+
+        function showEditForm(username) {
+            const admins = JSON.parse(localStorage.getItem('admins') || '[]');
+            const admin = admins.find(a => a.username === username);
+            if (admin) {
+                document.getElementById('editUsername').value = admin.username;
+                document.getElementById('editPassword').value = '';
+                document.getElementById('editRole').value = admin.role;
+                document.getElementById('editAdminForm').style.display = 'block';
+            }
+        }
+
+        function deleteAdmin(username) {
+            if (confirm('Are you sure you want to delete admin: ' + username)) {
+                const admins = JSON.parse(localStorage.getItem('admins') || '[]');
+                const filteredAdmins = admins.filter(a => a.username !== username);
+                localStorage.setItem('admins', JSON.stringify(filteredAdmins));
+                updateAdminList();
+                
+                const logs = JSON.parse(localStorage.getItem('adminLogs') || '[]');
+                logs.unshift({
+                    timestamp: new Date().toISOString(),
+                    action: `Admin deleted: ${username} by harvey`
+                });
+                localStorage.setItem('adminLogs', JSON.stringify(logs));
+            }
+        }
+
+        function showAdminList() {
+            document.getElementById('adminListOverlay').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            updateAdminList();
+        }
+
+        function closeAdminList() {
+            document.getElementById('adminListOverlay').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        window.onload = function() {
+            initializeAdmin();
+
+            const adminName = localStorage.getItem('adminName');
+            if (adminName) {
+                document.getElementById('adminForm').style.display = 'none';
+                document.getElementById('logoutBtn').style.display = 'inline-block';
+                document.getElementById('adminName').textContent = adminName;
+                
+                if (adminName === 'harvey') {
+                    document.getElementById('addAdminBtn').style.display = 'inline-block';
+                }
+                
+                showAdminList();
+            }
+        }
+
+        document.getElementById('adminForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            const admins = JSON.parse(localStorage.getItem('admins') || '[]');
+            const admin = admins.find(a => a.username === username && a.password === password);
+
+            if (admin) {
+                localStorage.setItem('adminName', username);
+                localStorage.setItem('isAdmin', 'true');
+                
+                const logs = JSON.parse(localStorage.getItem('adminLogs') || '[]');
+                logs.unshift({
+                    timestamp: new Date().toISOString(),
+                    action: `Admin login: ${username}`
+                });
+                localStorage.setItem('adminLogs', JSON.stringify(logs));
+                
+                const message = document.createElement('div');
+                message.className = 'success-message';
+                message.style.position = 'fixed';
+                message.style.bottom = '20px';
+                message.style.right = '20px';
+                message.style.transform = 'none';
+                message.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
+                message.style.padding = '10px 20px';
+                message.style.borderRadius = '5px';
+                message.style.border = '1px solid var(--neon-orange)';
+                message.style.color = 'white';
+                message.style.zIndex = '9999';
+                message.style.textAlign = 'center';
+                message.style.fontSize = '14px';
+                message.style.boxShadow = '0 0 10px var(--neon-orange)';
+                message.innerHTML = `
+                    <h4 style="margin: 0; color: var(--neon-orange); font-size: 16px;">Giriş Başarılı!</h4>
+                    <p style="margin: 5px 0 0 0; font-size: 14px;">Hoşgeldin, ${username}</p>
+                `;
+                document.body.appendChild(message);
+
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 2000);
+            } else {
+                const errorMsg = document.createElement('div');
+                errorMsg.className = 'error-message';
+                errorMsg.style.position = 'fixed';
+                errorMsg.style.bottom = '20px';
+                errorMsg.style.right = '20px';
+                errorMsg.style.transform = 'none';
+                errorMsg.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
+                errorMsg.style.padding = '10px 20px';
+                errorMsg.style.borderRadius = '5px';
+                errorMsg.style.border = '1px solid #ff3333';
+                errorMsg.style.color = 'white';
+                errorMsg.style.zIndex = '9999';
+                errorMsg.style.textAlign = 'center';
+                errorMsg.style.fontSize = '14px';
+                errorMsg.style.boxShadow = '0 0 10px #ff3333';
+                errorMsg.innerHTML = `
+                    <h4 style="margin: 0; color: #ff3333; font-size: 16px;">Giriş Başarısız!</h4>
+                    <p style="margin: 5px 0 0 0; font-size: 14px;">Geçersiz kullanıcı adı veya şifre</p>
+                `;
+                document.body.appendChild(errorMsg);
+
+                setTimeout(() => {
+                    errorMsg.remove();
+                }, 2000);
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            const adminName = localStorage.getItem('adminName');
+            const logs = JSON.parse(localStorage.getItem('adminLogs') || '[]');
+            logs.unshift({
+                timestamp: new Date().toISOString(),
+                action: `Admin logout: ${adminName}`
+            });
+            localStorage.setItem('adminLogs', JSON.stringify(logs));
+            
+            localStorage.removeItem('adminName');
+            localStorage.removeItem('isAdmin');
+            window.location.reload();
+        });
+
+        document.getElementById('addAdminBtn').addEventListener('click', function() {
+            document.getElementById('addAdminForm').style.display = 'block';
+        });
+
+        document.getElementById('saveEditBtn').addEventListener('click', function() {
+            const username = document.getElementById('editUsername').value;
+            const newPassword = document.getElementById('editPassword').value;
+            const newRole = document.getElementById('editRole').value;
+
+            const admins = JSON.parse(localStorage.getItem('admins') || '[]');
+            const admin = admins.find(a => a.username === username);
+            if (admin) {
+                if (newPassword) admin.password = newPassword;
+                if (newRole) admin.role = newRole;
+                localStorage.setItem('admins', JSON.stringify(admins));
+                
+                const logs = JSON.parse(localStorage.getItem('adminLogs') || '[]');
+                logs.unshift({
+                    timestamp: new Date().toISOString(),
+                    action: `Admin updated: ${username} by harvey`
+                });
+                localStorage.setItem('adminLogs', JSON.stringify(logs));
+                
+                document.getElementById('editAdminForm').style.display = 'none';
+                updateAdminList();
+            }
+        });
+
+        document.getElementById('saveAdminBtn').addEventListener('click', function() {
+            const username = document.getElementById('newAdminUsername').value;
+            const password = document.getElementById('newAdminPassword').value;
+            const role = document.getElementById('newAdminRole').value;
+            
+            if (username && password) {
+                const admins = JSON.parse(localStorage.getItem('admins') || '[]');
+                if (!admins.some(admin => admin.username === username)) {
+                    admins.push({
+                        username: username,
+                        password: password,
+                        role: role,
+                        status: 'active'
+                    });
+                    localStorage.setItem('admins', JSON.stringify(admins));
+                    
+                    const logs = JSON.parse(localStorage.getItem('adminLogs') || '[]');
+                    logs.unshift({
+                        timestamp: new Date().toISOString(),
+                        action: `New admin added: ${username} by harvey`
+                    });
+                    localStorage.setItem('adminLogs', JSON.stringify(logs));
+                    
+                    document.getElementById('newAdminUsername').value = '';
+                    document.getElementById('newAdminPassword').value = '';
+                    document.getElementById('addAdminForm').style.display = 'none';
+                    updateAdminList();
+                } else {
+                    alert('Username already exists!');
+                }
+            }
+        });
+
+        function createNeonCircles() {
+            const container = document.getElementById('neon-circles');
+            const numCircles = 5;
+            for (let i = 0; i < numCircles; i++) {
+                const circle = document.createElement('div');
+                circle.className = 'neon-circle';
+                circle.style.width = Math.random() * 100 + 50 + 'px';
+                circle.style.height = circle.style.width;
+                circle.style.left = Math.random() * 100 + 'vw';
+                circle.style.top = Math.random() * 100 + 'vh';
+                circle.style.animationDelay = Math.random() * 5 + 's';
+                container.appendChild(circle);
+            }
+        }
+        createNeonCircles();
+    </script>
+</body>
+</html> 

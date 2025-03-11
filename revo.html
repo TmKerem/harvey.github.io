@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revolver - GTA5 Mods</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+    <link href="standard-files.css" rel="stylesheet">
+    <style>
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            white-space: nowrap;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-size: 15px;
+            padding: 5px 10px;
+        }
+
+        .search-admin-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .search-container input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 107, 0, 0.5);
+            color: #fff;
+            padding: 8px 15px;
+            width: 200px;
+            max-width: 100%;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-right: auto;
+        }
+
+        .logo {
+            height: 50px;
+            width: auto;
+        }
+
+        .revolver-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+            margin: 0 auto;
+            max-width: 1800px;
+        }
+
+        @media (max-width: 1800px) {
+            .revolver-cards {
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 1400px) {
+            .revolver-cards {
+                gap: 25px;
+            }
+        }
+
+        @media (max-width: 1000px) {
+            .revolver-cards {
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .revolver-cards {
+                gap: 15px;
+                padding: 10px;
+            }
+        }
+
+        .revolver-card {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid var(--neon-orange);
+            border-radius: 15px;
+            padding: 1.5rem;
+            color: white;
+            transition: all 0.3s ease;
+            position: relative;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 15px rgba(255, 107, 0, 0.3);
+        }
+
+        .revolver-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 25px rgba(255, 107, 0, 0.5);
+        }
+
+        .revolver-card img {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--neon-orange);
+        }
+
+        .revolver-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--neon-orange);
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .revolver-card p {
+            font-size: 1rem;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .card-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-top: auto;
+        }
+
+        .admin-buttons {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .download-btn, .edit-btn, .delete-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .download-btn {
+            background: var(--neon-orange);
+            color: black;
+            width: 100%;
+        }
+
+        .edit-btn {
+            background: #4CAF50;
+            color: white;
+            flex: 1;
+        }
+
+        .delete-btn {
+            background: #f44336;
+            color: white;
+            flex: 1;
+        }
+
+        .download-btn:hover {
+            background: #ff8533;
+            transform: translateY(-2px);
+        }
+
+        .edit-btn:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .delete-btn:hover {
+            background: #da190b;
+            transform: translateY(-2px);
+        }
+
+        .add-revolver-btn {
+            position: fixed;
+            right: 2rem;
+            top: 1rem;
+            background: var(--neon-orange);
+            color: black;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 1001;
+            display: none;
+            font-family: 'Orbitron', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .add-revolver-btn:hover {
+            background: #ff8533;
+            transform: translateY(-2px);
+        }
+
+        .revolver-form {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.95);
+            padding: 2rem;
+            border: 2px solid var(--neon-orange);
+            border-radius: 15px;
+            z-index: 1002;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 0 25px rgba(255, 107, 0, 0.5);
+        }
+
+        .revolver-form h3 {
+            color: var(--neon-orange);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 1.75rem;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: white;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--neon-orange);
+            color: white;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .form-group button {
+            background: var(--neon-orange);
+            color: black;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 0.75rem;
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .form-group button:hover {
+            background: #ff8533;
+            transform: translateY(-2px);
+        }
+
+        .is-admin .add-revolver-btn {
+            display: inline-block;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-toggle::after {
+            display: none;
+        }
+
+        .dropdown-menu {
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid var(--neon-orange);
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-animation"></div>
+    <div id="neon-circles"></div>
+
+    <nav>
+        <div class="nav-container">
+            <div class="logo-container">
+                <img src="Thirtyone.png" alt="Thirtyone Logo" class="logo">
+                <span class="brand-name">GTA5</span>
+            </div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="game-files.html">Standard Files</a>
+                <a href="redux.html">Redux</a>
+                <div class="dropdown">
+                    <a href="gunpack.html" class="nav-link">Gun-Pack</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="revo.html">Revolver</a></li>
+                        <li><a class="dropdown-item" href="carbine.html">Carbine</a></li>
+                        <li><a class="dropdown-item" href="shotguns.html">Shotguns</a></li>
+                        <li><a class="dropdown-item" href="assault.html">Assault Rifles</a></li>
+                    </ul>
+                </div>
+                <a href="mods.html">Mods</a>
+                <a href="admin-log.html" class="admin-only">Admin Log</a>
+            </div>
+            <div class="search-admin-container">
+                <div class="search-container">
+                    <input type="text" placeholder="Dosya Ara...">
+                </div>
+                <a href="admin.html" class="admin-link">Admin Girişi</a>
+                <span id="adminName" class="admin-name"></span>
+            </div>
+        </div>
+    </nav>
+
+    <button class="add-revolver-btn" id="addRevolverBtn">Revolver Ekle</button>
+
+    <div class="revolver-form" id="revolverForm">
+        <h3>Yeni Revolver Ekle</h3>
+        <form id="newRevolverForm">
+            <div class="form-group">
+                <label for="revolverName">Revolver Adı</label>
+                <input type="text" id="revolverName" required>
+            </div>
+            <div class="form-group">
+                <label for="revolverDescription">Açıklama</label>
+                <textarea id="revolverDescription" rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="revolverImage">Resim</label>
+                <input type="file" id="revolverImage" accept="image/*" required>
+            </div>
+            <div class="form-group">
+                <label for="revolverDownload">İndirme Linki</label>
+                <input type="text" id="revolverDownload" required>
+            </div>
+            <div class="form-group">
+                <button type="submit">Kaydet</button>
+                <button type="button" onclick="closeRevolverForm()">İptal</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="revolver-cards" id="revolverCards">
+        <!-- Kartlar JavaScript ile eklenecek -->
+    </div>
+
+    <script>
+        // Admin kontrolü
+        function checkAdmin() {
+            const adminName = localStorage.getItem('adminName');
+            if (adminName) {
+                document.body.classList.add('is-admin');
+                document.getElementById('adminName').textContent = `Admin: ${adminName}`;
+                const adminLink = document.querySelector('.admin-link');
+                adminLink.textContent = 'Çıkış Yap';
+                adminLink.classList.add('admin-logout');
+                adminLink.href = '#';
+                adminLink.onclick = logout;
+            }
+        }
+
+        // Çıkış işlemi
+        function logout(e) {
+            if (e) e.preventDefault();
+            localStorage.removeItem('adminName');
+            localStorage.removeItem('isAdmin');
+            window.location.reload();
+        }
+
+        let editingIndex = -1; // Düzenlenen revolver'ın indeksini tutacak
+
+        function showRevolverForm() {
+            editingIndex = -1; // Yeni ekleme için sıfırla
+            document.getElementById('revolverForm').style.display = 'block';
+            document.getElementById('newRevolverForm').reset(); // Formu temizle
+        }
+
+        function closeRevolverForm() {
+            document.getElementById('revolverForm').style.display = 'none';
+            editingIndex = -1; // Düzenleme modunu sıfırla
+        }
+
+        // Revolver ekleme ve düzenleme
+        document.getElementById('newRevolverForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const name = document.getElementById('revolverName').value;
+            const description = document.getElementById('revolverDescription').value;
+            const downloadLink = document.getElementById('revolverDownload').value;
+            const imageFile = document.getElementById('revolverImage').files[0];
+            let revolvers = [];
+            
+            try {
+                revolvers = JSON.parse(localStorage.getItem('revolvers') || '[]');
+            } catch (error) {
+                console.error('Veri okuma hatası:', error);
+                revolvers = [];
+            }
+
+            const processImage = (file) => {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = new Image();
+                        img.onload = function() {
+                            const canvas = document.createElement('canvas');
+                            const maxWidth = 800;
+                            const maxHeight = 600;
+                            let width = img.width;
+                            let height = img.height;
+
+                            if (width > maxWidth) {
+                                height = (maxWidth * height) / width;
+                                width = maxWidth;
+                            }
+                            if (height > maxHeight) {
+                                width = (maxHeight * width) / height;
+                                height = maxHeight;
+                            }
+
+                            canvas.width = width;
+                            canvas.height = height;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0, width, height);
+                            resolve(canvas.toDataURL('image/jpeg', 0.7));
+                        };
+                        img.onerror = reject;
+                        img.src = e.target.result;
+                    };
+                    reader.onerror = reject;
+                    reader.readAsDataURL(file);
+                });
+            };
+
+            try {
+                let imageData = null;
+                if (imageFile) {
+                    imageData = await processImage(imageFile);
+                } else if (editingIndex !== -1) {
+                    imageData = revolvers[editingIndex].image;
+                }
+
+                if (!imageData && editingIndex === -1) {
+                    alert('Lütfen bir resim seçin');
+                    return;
+                }
+
+                const revolverData = {
+                    id: Date.now(),
+                    name: name,
+                    description: description,
+                    downloadLink: downloadLink,
+                    image: imageData,
+                    addedBy: localStorage.getItem('adminName'),
+                    addedDate: new Date().toISOString()
+                };
+
+                if (editingIndex === -1) {
+                    revolvers.push(revolverData);
+                } else {
+                    revolvers[editingIndex] = {
+                        ...revolvers[editingIndex],
+                        ...revolverData,
+                        editedBy: localStorage.getItem('adminName'),
+                        editedDate: new Date().toISOString()
+                    };
+                }
+
+                localStorage.setItem('revolvers', JSON.stringify(revolvers));
+
+                // Log kaydı
+                const logs = JSON.parse(localStorage.getItem('adminLogs') || '[]');
+                logs.unshift({
+                    timestamp: new Date().toISOString(),
+                    action: editingIndex === -1 ? 
+                        `Yeni revolver eklendi: ${name}` :
+                        `Revolver düzenlendi: ${name}`,
+                    details: {
+                        type: editingIndex === -1 ? 'add' : 'edit',
+                        itemType: 'revolver',
+                        name: name,
+                        by: localStorage.getItem('adminName')
+                    }
+                });
+                localStorage.setItem('adminLogs', JSON.stringify(logs));
+
+                closeRevolverForm();
+                document.getElementById('newRevolverForm').reset();
+                loadRevolvers();
+            } catch (error) {
+                console.error('İşlem hatası:', error);
+                alert('Bir hata oluştu. Lütfen daha küçük bir resim seçin veya tekrar deneyin.');
+            }
+        });
+
+        // Revolver'ları yükleme
+        function loadRevolvers() {
+            try {
+                const container = document.getElementById('revolverCards');
+                let revolvers = [];
+                
+                try {
+                    revolvers = JSON.parse(localStorage.getItem('revolvers') || '[]');
+                } catch (error) {
+                    console.error('Veri okuma hatası:', error);
+                    revolvers = [];
+                }
+                
+                container.innerHTML = '';
+                
+                if (revolvers.length === 0) {
+                    container.innerHTML = '<div class="no-items" style="text-align: center; color: white; padding: 20px;">Henüz revolver eklenmemiş.</div>';
+                    return;
+                }
+
+                revolvers.forEach((revolver, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'revolver-card';
+                    card.innerHTML = `
+                        <img src="${revolver.image}" alt="${revolver.name}" onerror="this.src='placeholder.jpg'">
+                        <h3>${revolver.name}</h3>
+                        <p>${revolver.description}</p>
+                        <div class="card-buttons">
+                            ${localStorage.getItem('adminName') ? `
+                                <div class="admin-buttons">
+                                    <button onclick="editRevolver(${index})" class="edit-btn">Düzenle</button>
+                                    <button onclick="deleteRevolver(${index})" class="delete-btn">Sil</button>
+                                </div>
+                            ` : ''}
+                            <a href="${revolver.downloadLink}" class="download-btn" target="_blank">İndir</a>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            } catch (error) {
+                console.error('Yükleme hatası:', error);
+                alert('Verileri yüklerken bir hata oluştu. Lütfen sayfayı yenileyin.');
+            }
+        }
+
+        // Revolver silme
+        function deleteRevolver(index) {
+            if (confirm('Bu revolver\'ı silmek istediğinizden emin misiniz?')) {
+                try {
+                    const revolvers = JSON.parse(localStorage.getItem('revolvers') || '[]');
+                    const deletedRevolver = revolvers[index];
+                    revolvers.splice(index, 1);
+                    localStorage.setItem('revolvers', JSON.stringify(revolvers));
+
+                    // Log kaydı
+                    const logs = JSON.parse(localStorage.getItem('adminLogs') || '[]');
+                    logs.unshift({
+                        timestamp: new Date().toISOString(),
+                        action: `Revolver silindi: ${deletedRevolver.name} by ${localStorage.getItem('adminName')}`,
+                        details: {
+                            type: 'delete',
+                            itemType: 'revolver',
+                            name: deletedRevolver.name,
+                            deletedBy: localStorage.getItem('adminName')
+                        }
+                    });
+                    localStorage.setItem('adminLogs', JSON.stringify(logs));
+
+                    loadRevolvers();
+                } catch (error) {
+                    console.error('Silme hatası:', error);
+                    alert('Silme işlemi sırasında bir hata oluştu. Lütfen tekrar deneyin.');
+                }
+            }
+        }
+
+        function editRevolver(index) {
+            try {
+                const revolvers = JSON.parse(localStorage.getItem('revolvers') || '[]');
+                const revolver = revolvers[index];
+                
+                editingIndex = index;
+                
+                document.getElementById('revolverName').value = revolver.name;
+                document.getElementById('revolverDescription').value = revolver.description;
+                document.getElementById('revolverDownload').value = revolver.downloadLink;
+                
+                document.getElementById('revolverForm').style.display = 'block';
+            } catch (error) {
+                console.error('Düzenleme hatası:', error);
+                alert('Düzenleme işlemi sırasında bir hata oluştu. Lütfen tekrar deneyin.');
+            }
+        }
+
+        // Arama işlevi
+        function searchRevolvers(searchTerm) {
+            const container = document.getElementById('revolverCards');
+            let revolvers = [];
+            
+            try {
+                revolvers = JSON.parse(localStorage.getItem('revolvers') || '[]');
+            } catch (error) {
+                console.error('Veri okuma hatası:', error);
+                revolvers = [];
+            }
+            
+            const filteredRevolvers = revolvers.filter(revolver => {
+                const searchString = searchTerm.toLowerCase();
+                return revolver.name.toLowerCase().includes(searchString) ||
+                       revolver.description.toLowerCase().includes(searchString);
+            });
+            
+            container.innerHTML = '';
+            
+            if (filteredRevolvers.length === 0) {
+                container.innerHTML = '<div class="no-items" style="text-align: center; color: white; padding: 20px;">Arama sonucu bulunamadı.</div>';
+                return;
+            }
+
+            filteredRevolvers.forEach((revolver, index) => {
+                const card = document.createElement('div');
+                card.className = 'revolver-card';
+                card.innerHTML = `
+                    <img src="${revolver.image}" alt="${revolver.name}" onerror="this.src='placeholder.jpg'">
+                    <h3>${revolver.name}</h3>
+                    <p>${revolver.description}</p>
+                    <div class="card-buttons">
+                        ${localStorage.getItem('adminName') ? `
+                            <div class="admin-buttons">
+                                <button onclick="editRevolver(${index})" class="edit-btn">Düzenle</button>
+                                <button onclick="deleteRevolver(${index})" class="delete-btn">Sil</button>
+                            </div>
+                        ` : ''}
+                        <a href="${revolver.downloadLink}" class="download-btn" target="_blank">İndir</a>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Sayfa yüklendiğinde
+        window.onload = function() {
+            checkAdmin();
+            loadRevolvers();
+            createNeonCircles();
+
+            // Add Revolver butonu için event listener
+            document.getElementById('addRevolverBtn').addEventListener('click', showRevolverForm);
+
+            // Arama input'u için event listener
+            const searchInput = document.querySelector('.search-container input');
+            let searchTimeout;
+            searchInput.addEventListener('input', function(e) {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    const searchTerm = e.target.value.trim();
+                    if (searchTerm === '') {
+                        loadRevolvers();
+                    } else {
+                        searchRevolvers(searchTerm);
+                    }
+                }, 300);
+            });
+        }
+
+        // Neon daire efektleri
+        function createNeonCircles() {
+            const container = document.getElementById('neon-circles');
+            const numCircles = 5;
+            
+            for (let i = 0; i < numCircles; i++) {
+                const circle = document.createElement('div');
+                circle.className = 'neon-circle';
+                circle.style.width = Math.random() * 100 + 50 + 'px';
+                circle.style.height = circle.style.width;
+                circle.style.left = Math.random() * 100 + 'vw';
+                circle.style.top = Math.random() * 100 + 'vh';
+                circle.style.animationDelay = Math.random() * 5 + 's';
+                container.appendChild(circle);
+            }
+        }
+    </script>
+</body>
+</html>
